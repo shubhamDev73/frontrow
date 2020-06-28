@@ -1,0 +1,69 @@
+Table user {
+  id bigint [pk, note: 'facebook id']
+  name varchar(50) [not null]
+  is_page boolean [default: false]
+  join_time datetime [not null, note: 'facebook joining time']
+  friends int [not null]
+  groups int [not null]
+  lives varchar(30) [default: null]
+  work varchar(200) [default: null, note: 'if page, page description']
+  study varchar(200) [default: null]
+}
+
+Table community {
+  id bigint [pk, note: 'facebook id']
+  name varchar(50) [unique]
+  created_on datetime [not null]
+}
+
+Table activity {
+  id int [pk, increment]
+  user bigint [ref: > user.id]
+  community bigint [ref: > community.id]
+  join_time datetime [not null]
+  leave_time datetime [default: null]
+  user_type user_type [default: 'member']
+}
+
+Enum user_type {
+  member
+  admin
+  moderator
+  creator
+  banned
+}
+
+Table answer {
+  id int [pk, increment]
+  activity int [ref: > activity.id]
+  question varchar(100) [not null]
+  answer varchar(100) [not null]
+}
+
+Table post {
+  id bigint [pk, note: 'facebook id']
+  community bigint [ref: > community.id]
+  user bigint [ref: > user.id]
+  time datetime [not null]
+  type post_type [default: 'post']
+  text varchar(1000) [not null]
+  likes int [not null]
+  shares int [not null]
+}
+
+Enum post_type {
+  post
+  shared_a_post
+  shared_a_link
+  first_post
+}
+
+Table comment {
+  id bigint [pk, note: 'facebook id']
+  post bigint [ref: > post.id]
+  comment bigint [null, ref: > comment.id, note: 'if reply, the comment which it is reply of']
+  user bigint [ref: > user.id]
+  time datetime [not null]
+  text varchar(1000) [not null]
+  likes int [not null]
+}
