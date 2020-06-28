@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+	<head>
+		<meta charset="utf-8">
+		<title>Upload data files</title>
+	</head>
+	<body>
+		<form method="POST" action="/upload/posts/" enctype="multipart/form-data">
+			<h2>Upload posts</h2>
+			<h4>Copy: &lt;div aria-label="News Feed"&gt;</h4>
+			Community:
+			<select name="community">
+				<% communities.forEach((community) => { %>
+				<option value="<%= community.id %>"><%= community.name %></option>
+				<% }); %>
+			</select><br />
+			Posts File: <input name="posts_file" type="file" /><br />
+			Posts to analyse: <input name="posts_number" type="number" value="0" />(0: all)<br />
+			<input type="submit" /><br />
+		</form>
+
+		<br />
+		<form method="POST" action="/upload/members/" enctype="multipart/form-data">
+			<h2>Upload members</h2>
+			<h4>Copy: &lt;div id="groupsMemberBrowser"&gt;</h4>
+			Community:
+			<select name="community">
+				<% communities.forEach((community) => { %>
+				<option value="<%= community.id %>"><%= community.name %></option>
+				<% }); %>
+			</select><br />
+			Members File: <input name="members_file" type="file" /><br />
+			Members to analyse: <input name="members_number" type="number" value="0" />(0: all)<br />
+			<input type="submit" /><br />
+		</form>
+
+		<br />
+		<form method="POST" action="/upload/requests/" enctype="multipart/form-data">
+			<h2>Upload requests</h2>
+			<h4>Copy: &lt;div id="member_requests_pagelet"&gt;</h4>
+			Community:
+			<select name="community">
+				<% communities.forEach((community) => { %>
+				<option value="<%= community.id %>"><%= community.name %></option>
+				<% }); %>
+			</select><br />
+			Requests File: <input name="requests_file" type="file" /><br />
+			Requests to analyse: <input name="requests_number" type="number" value="0" />(0: all)<br />
+			<input type="submit" /><br />
+		</form>
+
+		<br />
+		<a href="/">Back</a>
+	</body>
+</html>
