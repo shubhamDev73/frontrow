@@ -79,8 +79,6 @@ router.post('/posts/', upload.single('posts_file'), (req, res) => {
 					queries = 2 * posts.length;
 					posts.forEach((post) => {
 
-						console.log("Analysing post id: " + post['id']);
-
 						if(post['error']){
 							errors.push({
 								"code": "ER_ANALYSE_POST",
@@ -88,6 +86,8 @@ router.post('/posts/', upload.single('posts_file'), (req, res) => {
 								"errno": 401,
 								"post": post,
 							});
+							queries -= 2;
+							return;
 						}
 						queries += 2 * post['comments'].length;
 
@@ -95,8 +95,6 @@ router.post('/posts/', upload.single('posts_file'), (req, res) => {
 						const comment = (results) => {
 
 							post['comments'].forEach((comment) => {
-
-								console.log("Analysing comment id: " + comment['id']);
 
 								if(comment['error']){
 									errors.push({
@@ -106,14 +104,14 @@ router.post('/posts/', upload.single('posts_file'), (req, res) => {
 										"post": post,
 										"comment": comment,
 									});
+									queries -= 2;
+									return;
 								}
 								queries += 2 * comment['replies'].length;
 
 								// inserting/updating reply
 								const reply = (results) => {
 									comment['replies'].forEach((reply) => {
-
-										console.log("Analysing reply id: " + reply['id']);
 
 										if(reply['error']){
 											errors.push({
@@ -124,6 +122,8 @@ router.post('/posts/', upload.single('posts_file'), (req, res) => {
 												"comment": comment,
 												"reply": reply,
 											});
+											queries -= 2;
+											return;
 										}
 
 										execute("SELECT `id` FROM `comment` WHERE `id` = ? AND `comment` = ?", [reply['id'], comment['id']], res, (results) => {
@@ -225,8 +225,6 @@ router.post('/members/', upload.single('members_file'), (req, res) => {
 					queries = 5 * users.length;
 					users.forEach((user) => {
 
-						console.log("Analysing user id: " + user['id'] + ", name: " + user['name']);
-
 						// inserting/updating activity
 						const activity = (results) => {
 							var sql = "SELECT `user_type` FROM `activity` WHERE `user` = ? AND `community` = ? AND `leave_time` IS NULL;";
@@ -327,8 +325,6 @@ router.post('/requests/', upload.single('requests_file'), (req, res) => {
 					const users = JSON.parse(data);
 					queries = 6 * users.length;
 					users.forEach((user) => {
-
-						console.log("Analysing user id: " + user['id'] + ", name: " + user['name']);
 
 						// inserting/updating answers
 						const answer = (results) => {
@@ -472,5 +468,3 @@ function execute(sql, values, res=null, callback=null){
 }
 
 module.exports = router;
-
-// 655148418616357 | Connect Rap Community | 2020-04-10 00:00:00
