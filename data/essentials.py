@@ -29,11 +29,12 @@ def get_id(link):
     if link in ids:
         return ids[link]
 
-    page = requests.post("https://lookup-id.com", data={"check": "Lookup", "fburl": link})
-    ids[link] = int(BeautifulSoup(page.content, 'html.parser').find(id='code').text)
+    try:
+        page = requests.post("https://lookup-id.com", data={"check": "Lookup", "fburl": link})
+        ids[link] = int(BeautifulSoup(page.content, 'html.parser').find(id='code').text)
+    except AttributeError:
+        raise ConnectionError("Error extracting id from link. Try again")
     return ids[link]
-    # return 0
-    # return 100006912032422
 
 def get_user_id(tag):
     parent = get_parent(tag, lambda tag: tag.has_attr('href'))
