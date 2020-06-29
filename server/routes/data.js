@@ -222,56 +222,67 @@ router.post('/members/', upload.single('members_file'), (req, res) => {
 
 				connect(() => {
 					const users = JSON.parse(data);
-					queries = 5 * users.length;
-					users.forEach((user) => {
+					queries = 1 + 5 * users.length;
+					execute("SELECT `user` FROM `activity` WHERE `community` = ? AND `leave_time` IS NULL;", [community], res, (results) => {
+						var existing_users = results.map((result) => {return result.user});
+						users.forEach((user) => {
 
-						// inserting/updating activity
-						const activity = (results) => {
-							var sql = "SELECT `user_type` FROM `activity` WHERE `user` = ? AND `community` = ? AND `leave_time` IS NULL;";
-							var values = [user['id'], community];
-							execute(sql, values, res, (results) => {
-								if(results.length == 0){
-									// user not present in group activity. inserting
-									sql = "INSERT INTO `activity` (`user`, `community`, `join_time`, `user_type`)\
-									VALUES (?, ?, convert(?, datetime), ?)";
-									values = [user['id'], community, user['join_time'], user['type']];
-									execute(sql, values, res);
-									execute(null, null, res);
-								}else{
-									// user present in group activity
-									if(results[0].user_type != user['type']){
-										// user type changed. updating
-										sql = "UPDATE `activity` SET `leave_time` = convert(?, datetime) WHERE `user` = ? AND `community` = ?;";
-										values = [new Date(), user['id'], community];
-										execute(sql, values, res, (results) => {
-											// creating new activity with new user_type
-											sql = "INSERT INTO `activity` (`user`, `community`, `join_time`, `user_type`)\
-											VALUES (?, ?, convert(?, datetime), ?)";
-											values = [user['id'], community, new Date(), user['type']];
-											execute(sql, values, res);
-										});
+							const index = existing_users.indexOf(user['id'])
+							if(index >= 0)
+								existing_users.splice(index, 1);
+
+							// inserting/updating activity
+							const activity = (results) => {
+								var sql = "SELECT `user_type` FROM `activity` WHERE `user` = ? AND `community` = ? AND `leave_time` IS NULL;";
+								var values = [user['id'], community];
+								execute(sql, values, res, (results) => {
+									if(results.length == 0){
+										// user not present in group activity. inserting
+										sql = "INSERT INTO `activity` (`user`, `community`, `join_time`, `user_type`)\
+										VALUES (?, ?, convert(?, datetime), ?)";
+										values = [user['id'], community, user['join_time'], user['type']];
+										execute(sql, values, res);
+										execute(null, null, res);
 									}else{
-										execute(null, null, res);
-										execute(null, null, res);
+										// user present in group activity
+										if(results[0].user_type != user['type']){
+											// user type changed. updating
+											sql = "UPDATE `activity` SET `leave_time` = convert(?, datetime) WHERE `user` = ? AND `community` = ?;";
+											values = [new Date(), user['id'], community];
+											execute(sql, values, res, (results) => {
+												// creating new activity with new user_type
+												sql = "INSERT INTO `activity` (`user`, `community`, `join_time`, `user_type`)\
+												VALUES (?, ?, convert(?, datetime), ?)";
+												values = [user['id'], community, new Date(), user['type']];
+												execute(sql, values, res);
+											});
+										}else{
+											execute(null, null, res);
+											execute(null, null, res);
+										}
 									}
+								});
+							};
+
+							// inserting/updating user
+							execute("SELECT `id` FROM `user` WHERE `id` = ?", [user['id']], res, (results) => {
+								if(results.length == 0){
+									// user not found. inserting
+									var sql = "INSERT INTO `user` (`id`, `name`, `is_page`, `join_time`, `friends`, `groups`, `lives`, `work`, `study`)\
+									VALUES (?, ?, ?, convert(?, datetime), ?, ?, ?, ?, ?)";
+									var values = [user['id'], user['name'], user['is_page'], user['join_time'], user['friends'], user['groups'], user['lives'], user['work'], user['study']];
+									execute(sql, values, res, activity);
+								}else{
+									// user found. updating
+									var sql = "UPDATE `user` SET `name` = ?, `is_page` = ?, `join_time` = ?, `friends` = ?, `groups` = ?, `lives` = ?, `work` = ?, `study` = ? WHERE `id` = ?";
+									var values = [user['name'], user['is_page'], user['join_time'], user['friends'], user['groups'], user['lives'], user['work'], user['study'], user['id']];
+									execute(sql, values, res, activity);
 								}
 							});
-						};
-
-						// inserting/updating user
-						execute("SELECT `id` FROM `user` WHERE `id` = ?", [user['id']], res, (results) => {
-							if(results.length == 0){
-								// user not found. inserting
-								var sql = "INSERT INTO `user` (`id`, `name`, `is_page`, `join_time`, `friends`, `groups`, `lives`, `work`, `study`)\
-								VALUES (?, ?, ?, convert(?, datetime), ?, ?, ?, ?, ?)";
-								var values = [user['id'], user['name'], user['is_page'], user['join_time'], user['friends'], user['groups'], user['lives'], user['work'], user['study']];
-								execute(sql, values, res, activity);
-							}else{
-								// user found. updating
-								var sql = "UPDATE `user` SET `name` = ?, `is_page` = ?, `join_time` = ?, `friends` = ?, `groups` = ?, `lives` = ?, `work` = ?, `study` = ? WHERE `id` = ?";
-								var values = [user['name'], user['is_page'], user['join_time'], user['friends'], user['groups'], user['lives'], user['work'], user['study'], user['id']];
-								execute(sql, values, res, activity);
-							}
+						});
+						queries += existing_users.length;
+						existing_users.forEach((user) => {
+							execute("UPDATE `activity` SET `leave_time` = convert(?, datetime) WHERE `user` = ? AND `community` = ? AND `leave_time` IS NULL;", [new Date(), user, community], res);
 						});
 					});
 				});

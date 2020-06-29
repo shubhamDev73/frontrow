@@ -30,5 +30,3 @@ TO-DO
 - Server
   - API
   - common connect, execute
-  - database
-    - user leave date
