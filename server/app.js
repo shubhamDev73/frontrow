@@ -5,6 +5,13 @@ const app = express();
 app.set('views', './views');
 app.set('view engine', 'ejs');
 
+const log = console.log;
+
+process.env.TZ = 'Asia/Kolkata';
+console.log = (string) => {
+	log.apply(console, ["[" + new Date().toLocaleString("es-CL") + "]"].concat(string));
+};
+
 const index = require('./routes/index');
 app.use('/', index);
 
