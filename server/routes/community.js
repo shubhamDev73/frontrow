@@ -12,12 +12,10 @@ const router = express();
 router.use(bodyParser.urlencoded({ extended: true }));
 
 router.get('/', (req, res) => {
-	console.log("GET " + req.originalUrl);
 	res.render('community');
 });
 
 router.post('/', (req, res) => {
-	console.log("POST " + req.originalUrl);
 	const community_name = req.body.community_name;
 	const community_link = req.body.community_link;
 	const community_created_on = req.body.community_created_on;

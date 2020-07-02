@@ -24,7 +24,6 @@ const storage = multer.diskStorage({
 const upload = multer({storage: storage});
 
 router.get('/', (req, res) => {
-	console.log("GET " + req.originalUrl);
 	const connection = new Connection();
 	connection.connect(() => {
 		connection.queries = 1;
@@ -35,7 +34,6 @@ router.get('/', (req, res) => {
 });
 
 router.post('/posts/', upload.single('posts_file'), (req, res) => {
-	console.log("POST " + req.originalUrl);
 	const community = Number(req.body.community);
 	const number = Number(req.body.posts_number);
 
@@ -180,7 +178,6 @@ router.post('/posts/', upload.single('posts_file'), (req, res) => {
 });
 
 router.post('/members/', upload.single('members_file'), (req, res) => {
-	console.log("POST " + req.originalUrl);
 	const community = Number(req.body.community);
 	const number = Number(req.body.members_number);
 
@@ -291,7 +288,6 @@ router.post('/members/', upload.single('members_file'), (req, res) => {
 });
 
 router.post('/requests/', upload.single('requests_file'), (req, res) => {
-	console.log("POST " + req.originalUrl);
 	const community = Number(req.body.community);
 	const number = Number(req.body.requests_number);
 

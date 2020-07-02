@@ -5,8 +5,6 @@ const Connection = require('../../connection');
 const router = express();
 
 router.get('/', (req, res) => {
-	console.log("GET " + req.originalUrl);
-
 	const connection = new Connection();
 	connection.connect(() => {
 		connection.queries = 1;
@@ -17,8 +15,6 @@ router.get('/', (req, res) => {
 });
 
 router.get('/:community/', (req, res) => {
-	console.log("GET " + req.originalUrl);
-
 	const connection = new Connection();
 	connection.connect(() => {
 		connection.queries = 1;

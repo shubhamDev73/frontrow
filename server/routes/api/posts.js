@@ -10,8 +10,6 @@ const community = {
 };
 
 router.get('/', (req, res) => {
-	console.log("GET " + req.originalUrl);
-
 	const connection = new Connection();
 	connection.connect(() => {
 		connection.queries = 1;
@@ -22,8 +20,6 @@ router.get('/', (req, res) => {
 });
 
 router.get('/:post/', (req, res) => {
-	console.log("GET " + req.originalUrl);
-
 	const connection = new Connection();
 	connection.connect(() => {
 		connection.queries = 1;

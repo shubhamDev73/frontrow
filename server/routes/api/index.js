@@ -2,7 +2,6 @@ const express = require('express');
 const router = express();
 
 router.get('/', (req, res) => {
-	console.log("GET " + req.originalUrl);
 	res.json({
 		"version": "0.0.1",
 		"message": "Root node for all api",

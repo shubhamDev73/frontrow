@@ -11,6 +11,11 @@ const app = express();
 app.set('views', './views');
 app.set('view engine', 'ejs');
 
+app.use((req, res, next) => {
+	console.log(req.method + " " + req.url);
+	next();
+});
+
 const index = require('./routes/index');
 app.use('/', index);
 
