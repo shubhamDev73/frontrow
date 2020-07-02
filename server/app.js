@@ -12,7 +12,7 @@ app.set('views', './views');
 app.set('view engine', 'ejs');
 
 app.use((req, res, next) => {
-	console.log(req.method + " " + req.url);
+	console.log(req.method + " " + req.url + " -> " + req.ip);
 	next();
 });
 

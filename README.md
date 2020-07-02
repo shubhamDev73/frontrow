@@ -29,4 +29,3 @@ TO-DO
 
 - Server
   - API
-  - logging IP
