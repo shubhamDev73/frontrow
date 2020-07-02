@@ -29,4 +29,4 @@ TO-DO
 
 - Server
   - API
-  - common connect, execute
+  - logging IP
