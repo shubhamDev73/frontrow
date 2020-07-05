@@ -10,15 +10,16 @@
 		<h2>Root node: /api/</h2>
 
 		<h3>1. End points</h3>
-		<b>Note:</b> for all date related end points, if end_date is ommitted, it is taken as today. if start_date is ommitted it is taken as end_date - 1 day
+		<b>Note:</b> for all date related end points, if end_date is ommitted, it is taken as today. if start_date is ommitted it is taken as end_date - 1 day.<br />
+		<b>Note:</b> if member-type is ommitted, all members are shown.<br />
 		<ul>
 			<li>/ : root node</li>
 			<li>/groups/ : list of all groups</li>
 			<li>/groups/&lt;group-id&gt;/ : details about a specific group</li>
 			<li>/groups/&lt;group-id&gt;/members/ : details about number of members for the given group</li>
-			<li>/groups/&lt;group-id&gt;/members/new/?start_date=YYYY-MM-DD&amp;end_date=YYYY-MM-DD : list of new members for the given group within the time period</li>
-			<li>/groups/&lt;group-id&gt;/members/left/?start_date=YYYY-MM-DD&amp;end_date=YYYY-MM-DD : list of left members for the given group within the time period</li>
-			<li>/groups/&lt;group-id&gt;/members/present/?start_date=YYYY-MM-DD&amp;end_date=YYYY-MM-DD : list of present members for the given group within the time period</li>
+			<li>/groups/&lt;group-id&gt;/members/new/?start_date=YYYY-MM-DD&amp;end_date=YYYY-MM-DD&amp;type=&lt;member-type&gt; : list of new members for the given group within the time period sorted by join_time</li>
+			<li>/groups/&lt;group-id&gt;/members/left/?start_date=YYYY-MM-DD&amp;end_date=YYYY-MM-DD&amp;type=&lt;member-type&gt; : list of left members for the given group within the time period sorted by leave_time</li>
+			<li>/groups/&lt;group-id&gt;/members/present/?start_date=YYYY-MM-DD&amp;end_date=YYYY-MM-DD&amp;type=&lt;member-type&gt; : list of present members for the given group within the time period sorted by join_time</li>
 			<li>/users/ : number of all users</li>
 			<li>/users/&lt;user-id&gt;/ : details about a specific user</li>
 		</ul>
