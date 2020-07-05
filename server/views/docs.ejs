@@ -17,9 +17,9 @@
 			<li>/groups/ : list of all groups</li>
 			<li>/groups/&lt;group-id&gt;/ : details about a specific group</li>
 			<li>/groups/&lt;group-id&gt;/members/ : details about number of members for the given group</li>
-			<li>/groups/&lt;group-id&gt;/members/new/?start_date=YYYY-MM-DD&amp;end_date=YYYY-MM-DD&amp;type=&lt;member-type&gt; : list of new members for the given group within the time period sorted by join_time</li>
-			<li>/groups/&lt;group-id&gt;/members/left/?start_date=YYYY-MM-DD&amp;end_date=YYYY-MM-DD&amp;type=&lt;member-type&gt; : list of left members for the given group within the time period sorted by leave_time</li>
-			<li>/groups/&lt;group-id&gt;/members/present/?start_date=YYYY-MM-DD&amp;end_date=YYYY-MM-DD&amp;type=&lt;member-type&gt; : list of present members for the given group within the time period sorted by join_time</li>
+			<li>/groups/&lt;group-id&gt;/members/new/?type=&lt;member-type&gt;&amp;start_date=YYYY-MM-DD&amp;end_date=YYYY-MM-DD : list of new members for the given group within the time period sorted by join_time</li>
+			<li>/groups/&lt;group-id&gt;/members/left/?type=&lt;member-type&gt;&amp;start_date=YYYY-MM-DD&amp;end_date=YYYY-MM-DD : list of left members for the given group within the time period sorted by leave_time</li>
+			<li>/groups/&lt;group-id&gt;/members/present/?type=&lt;member-type&gt;&amp;start_date=YYYY-MM-DD&amp;end_date=YYYY-MM-DD : list of present members for the given group within the time period sorted by join_time</li>
 			<li>/users/ : number of all users</li>
 			<li>/users/&lt;user-id&gt;/ : details about a specific user</li>
 		</ul>
@@ -27,7 +27,7 @@
 		<h3>2. Nodes</h3>
 		<ul>
 			<li>Group: {"id": group id, "name": group name, "created_on": date group created on}</li>
-			<li>Member: {"id": user id, "name": user name, "join_time": time of joining group}</li>
+			<li>Member: {"id": user id, "name": user name, "join_time": time of joining group, "leave_time": time of leaving group (if applicable), "member_type": type of member}</li>
 			<li>User: {"id": user id, "name": user name, "is_page": is user a person or page, "join_time": facebook joining time, "friends": number of friends, "groups": number of groups, "lives": where the user lives, "works": where the user works (or page description if user is a page), "study": where the user studies}</li>
 		</ul>
 	</body>
