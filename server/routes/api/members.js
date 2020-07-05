@@ -31,7 +31,7 @@ router.get('/new/', (req, res) => {
 	connection.connect(() => {
 		connection.queries = 1;
 		if(req.query.type){
-			connection.execute("SELECT `join_time` FROM `member` WHERE `group` = ? AND `leave_time` IS NULL AND `join_time` BETWEEN ? AND ? AND `member_type` = ? ORDER BY `join_time`;", [group.id, dates[0], dates[1], req.query.type], res, (results) => {
+			connection.execute("SELECT s.`join_time` FROM `member` m, `special_member` s WHERE s.`member` = m.`id` AND m.`group` = ? AND s.`leave_time` IS NULL AND s.`join_time` BETWEEN ? AND ? AND s.`member_type` = ? ORDER BY s.`join_time`;", [group.id, dates[0], dates[1], req.query.type], res, (results) => {
 				connection.response = essentials.periodify(results, 'join_time', dates, false, req.query.period);
 			});
 		}else{
@@ -48,7 +48,7 @@ router.get('/new/list/', (req, res) => {
 	connection.connect(() => {
 		connection.queries = 1;
 		if(req.query.type){
-			connection.execute("SELECT `user` AS `id`, `join_time`, `member_type` FROM `member` WHERE `group` = ? AND `leave_time` IS NULL AND `join_time` BETWEEN ? AND ? AND `member_type` = ? ORDER BY `join_time`;", [group.id, dates[0], dates[1], req.query.type], res, (results) => {
+			connection.execute("SELECT m.`user` AS `id`, s.`join_time`, s.`member_type` FROM `member` m, `special_member` s WHERE s.`member` = m.`id` AND m.`group` = ? AND s.`leave_time` IS NULL AND s.`join_time` BETWEEN ? AND ? AND s.`member_type` = ? ORDER BY s.`join_time`;", [group.id, dates[0], dates[1], req.query.type], res, (results) => {
 				connection.response = results;
 			});
 		}else{
@@ -65,7 +65,7 @@ router.get('/left/', (req, res) => {
 	connection.connect(() => {
 		connection.queries = 1;
 		if(req.query.type){
-			connection.execute("SELECT `leave_time` FROM `member` WHERE `group` = ? AND `leave_time` BETWEEN ? AND ? AND `member_type` = ? ORDER BY `leave_time`;", [group.id, dates[0], dates[1], req.query.type], res, (results) => {
+			connection.execute("SELECT s.`leave_time` FROM `member` m, `special_member` s WHERE s.`member` = m.`id` AND m.`group` = ? AND s.`leave_time` BETWEEN ? AND ? AND s.`member_type` = ? ORDER BY s.`leave_time`;", [group.id, dates[0], dates[1], req.query.type], res, (results) => {
 				connection.response = essentials.periodify(results, 'leave_time', dates, false, req.query.period);
 			});
 		}else{
@@ -82,7 +82,7 @@ router.get('/left/list/', (req, res) => {
 	connection.connect(() => {
 		connection.queries = 1;
 		if(req.query.type){
-			connection.execute("SELECT `user` as `id`, `leave_time` FROM `member` WHERE `group` = ? AND `leave_time` BETWEEN ? AND ? AND `member_type` = ? ORDER BY `leave_time`;", [group.id, dates[0], dates[1], req.query.type], res, (results) => {
+			connection.execute("SELECT m.`user` as `id`, s.`leave_time` FROM `member` m, `special_member` s WHERE s.`member` = m.`id` AND m.`group` = ? AND s.`leave_time` BETWEEN ? AND ? AND s.`member_type` = ? ORDER BY s.`leave_time`;", [group.id, dates[0], dates[1], req.query.type], res, (results) => {
 				connection.response = results;
 			});
 		}else{
@@ -99,7 +99,7 @@ router.get('/present/', (req, res) => {
 	connection.connect(() => {
 		connection.queries = 1;
 		if(req.query.type){
-			connection.execute("SELECT `join_time`, `leave_time` FROM `member` WHERE `group` = ? AND `member_type` = ? ORDER BY `join_time`;", [group.id, req.query.type], res, (results) => {
+			connection.execute("SELECT s.`join_time`, s.`leave_time` FROM `member` m, `special_member` s WHERE s.`member` = m.`id` AND m.`group` = ? AND s.`member_type` = ? ORDER BY s.`join_time`;", [group.id, req.query.type], res, (results) => {
 				connection.response = essentials.periodify(results, 'join_time', dates, true, req.query.period);
 			});
 		}else{
@@ -116,7 +116,7 @@ router.get('/present/list/', (req, res) => {
 	connection.connect(() => {
 		connection.queries = 1;
 		if(req.query.type){
-			connection.execute("SELECT `user` as `id`, `join_time`, `member_type` FROM `member` WHERE `group` = ? AND `join_time` <= ? AND (`leave_time` IS NULL OR `leave_time` >= ?) AND `member_type` = ? ORDER BY `join_time`;", [group.id, dates[0], dates[1], req.query.type], res, (results) => {
+			connection.execute("SELECT m.`user` as `id`, s.`join_time`, s.`member_type` FROM `member` m, `special_member` s WHERE s.`member` = m.`id` AND m.`group` = ? AND s.`join_time` <= ? AND (s.`leave_time` IS NULL OR s.`leave_time` >= ?) AND s.`member_type` = ? ORDER BY s.`join_time`;", [group.id, dates[0], dates[1], req.query.type], res, (results) => {
 				connection.response = results;
 			});
 		}else{
