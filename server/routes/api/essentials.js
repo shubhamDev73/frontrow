@@ -11,11 +11,23 @@ function getDates(req){
 }
 
 function periodify(results, key, dates, retain, period=null){
-	if(results.length == 0) return results;
+	var perioded_results = [];
+
 	if(period == null) period = 1; // default period
 	if(typeof period == 'string') period = Number(period);
 
-	var perioded_results = [];
+	if(results.length == 0){
+		if(dates[0].valueOf() == 0) return results;
+
+		// adding zeroes till end
+		var date = new Date(dates[0]);
+		perioded_results.push({'date': new Date(date), 'count': 0});
+		while(date < dates[1]){
+			date.setDate(date.getDate() + period);
+			perioded_results.push({'date': new Date(date), 'count': 0});
+		}
+		return perioded_results;
+	}
 
 	var current_date = dates[0].valueOf() == 0 ? results[0][key] : dates[0]; // default start date
 	var count = 0;
