@@ -9,31 +9,43 @@
 
 		<h2>Root node: /api/</h2>
 
-		<h3>1. End points</h3>
-		<b>Note:</b> for all date related end points, if end_date is ommitted, it is taken as today. if start_date is ommitted it is taken as zero (problematic for present members. specify start_date or use new members instead).<br />
-		<b>Note:</b> for period related end points, if start_date is ommitted, it is taken as date of first valid entry. if period is ommitted, it is taken as 1 day.<br />
-		<b>Note:</b> if member-type is ommitted, all members are shown.<br />
-		<ul>
-			<li>/ : root node</li>
-			<li>/groups/ : list of all groups</li>
-			<li>/groups/&lt;group-id&gt;/ : details about a specific group</li>
-			<li>/groups/&lt;group-id&gt;/members/ : details about number of members for the given group</li>
-			<li>/groups/&lt;group-id&gt;/members/new/?type=&lt;member-type&gt;&amp;start_date=YYYY-MM-DD&amp;end_date=YYYY-MM-DD&amp;period=#days : count of new members for the given group, of the given type, within the given time period, sorted by join_time, separated by the given period</li>
-			<li>/groups/&lt;group-id&gt;/members/new/list/?type=&lt;member-type&gt;&amp;start_date=YYYY-MM-DD&amp;end_date=YYYY-MM-DD : list of new members for the given group, of the given type, within the given time period, sorted by join_time</li>
-			<li>/groups/&lt;group-id&gt;/members/left/?type=&lt;member-type&gt;&amp;start_date=YYYY-MM-DD&amp;end_date=YYYY-MM-DD&amp;period=#days : count of left members for the given group, of the given type, within the given time period, sorted by leave_time, separated by the given period</li>
-			<li>/groups/&lt;group-id&gt;/members/left/list/?type=&lt;member-type&gt;&amp;start_date=YYYY-MM-DD&amp;end_date=YYYY-MM-DD : list of left members for the given group, of the given type, within the given time period, sorted by leave_time</li>
-			<li>/groups/&lt;group-id&gt;/members/present/?type=&lt;member-type&gt;&amp;start_date=YYYY-MM-DD&amp;end_date=YYYY-MM-DD&amp;period=#days : count of present members for the given group, of the given type, within the given time period, sorted by join_time, separated by the given period</li>
-			<li>/groups/&lt;group-id&gt;/members/present/list/?type=&lt;member-type&gt;&amp;start_date=YYYY-MM-DD&amp;end_date=YYYY-MM-DD : list of present members for the given group, of the given type, within the given time period, sorted by join_time</li>
-			<li>/users/ : number of all users</li>
-			<li>/users/&lt;user-id&gt;/ : details about a specific user</li>
-		</ul>
+		<ol>
+			<h3><li>End points</li></h3>
+			<strong>Note:</strong> for all date related end points, if end_date is ommitted, it is taken as today. if start_date is ommitted it is taken as zero (problematic for present members. specify start_date or use new members instead).<br />
+			<strong>Note:</strong> for period related end points, if start_date is ommitted, it is taken as date of first valid entry. if period is ommitted, it is taken as 1 day.<br />
+			<strong>Note:</strong> if member-type is ommitted, all members are shown.<br />
+			<ul>
+				<li>/ : root node</li>
+				<li>/groups/ : list of all groups</li>
+				<li>/groups/&lt;group-id&gt;/ : details about a specific group</li>
+				<li>/groups/&lt;group-id&gt;/members/ : details about number of members for the given group</li>
+				<li>/groups/&lt;group-id&gt;/members/new/?type=&lt;member-type&gt;&amp;start_date=YYYY-MM-DD&amp;end_date=YYYY-MM-DD&amp;period=#days : count of new members for the given group, of the given type, within the given time period, sorted by join_time, separated by the given period</li>
+				<li>/groups/&lt;group-id&gt;/members/new/list/?type=&lt;member-type&gt;&amp;start_date=YYYY-MM-DD&amp;end_date=YYYY-MM-DD : list of new members for the given group, of the given type, within the given time period, sorted by join_time</li>
+				<li>/groups/&lt;group-id&gt;/members/left/?type=&lt;member-type&gt;&amp;start_date=YYYY-MM-DD&amp;end_date=YYYY-MM-DD&amp;period=#days : count of left members for the given group, of the given type, within the given time period, sorted by leave_time, separated by the given period</li>
+				<li>/groups/&lt;group-id&gt;/members/left/list/?type=&lt;member-type&gt;&amp;start_date=YYYY-MM-DD&amp;end_date=YYYY-MM-DD : list of left members for the given group, of the given type, within the given time period, sorted by leave_time</li>
+				<li>/groups/&lt;group-id&gt;/members/present/?type=&lt;member-type&gt;&amp;start_date=YYYY-MM-DD&amp;end_date=YYYY-MM-DD&amp;period=#days : count of present members for the given group, of the given type, within the given time period, sorted by join_time, separated by the given period</li>
+				<li>/groups/&lt;group-id&gt;/members/present/list/?type=&lt;member-type&gt;&amp;start_date=YYYY-MM-DD&amp;end_date=YYYY-MM-DD : list of present members for the given group, of the given type, within the given time period, sorted by join_time</li>
+				<li>/users/ : number of all users</li>
+				<li>/users/&lt;user-id&gt;/ : details about a specific user</li>
+			</ul>
 
-		<h3>2. Nodes</h3>
-		<ul>
-			<li>Group: {"id": group id, "name": group name, "created_on": date group created on}</li>
-			<li>Member: {"id": user id, "name": user name, "join_time": time of joining group}</li>
-			<li>Member count: {"date": start date (end date is start date + period days), "count": number of members}</li>
-			<li>User: {"id": user id, "name": user name, "is_page": is user a person or page, "join_time": facebook joining time, "friends": number of friends, "groups": number of groups, "lives": where the user lives, "works": where the user works (or page description if user is a page), "study": where the user studies}</li>
-		</ul>
+			<h3><li>Nodes</li></h3>
+			<ul>
+				<li>Group: {"id": group id, "name": group name, "created_on": date group created on}</li>
+				<li>Member: {"id": user id, "name": user name, "join_time": time of joining group}</li>
+				<li>Member count: {"date": start date (end date is start date + period days), "count": number of members}</li>
+				<li>User: {"id": user id, "name": user name, "is_page": is user a person or page, "join_time": facebook joining time, "friends": number of friends, "groups": number of groups, "lives": where the user lives, "works": where the user works (or page description if user is a page), "study": where the user studies}</li>
+			</ul>
+
+			<h3><li>Acceptable values for member-type</li></h3>
+			<ul>
+				<li>creator</li>
+				<li>admin</li>
+				<li>moderator</li>
+				<li>banned</li>
+				<li>member (rest members)</li>
+				<li><em>none</em> (all members)</li>
+			</ul>
+		</ol>
 	</body>
 </html>
