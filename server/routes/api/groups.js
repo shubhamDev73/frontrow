@@ -19,7 +19,7 @@ router.get('/:group/', (req, res) => {
 	connection.connect(() => {
 		connection.queries = 1;
 		connection.execute("SELECT * FROM `group` WHERE `id` = ?", [req.params.group], res, (results) => {
-			connection.response = results;
+			connection.response = results[0];
 		});
 	});
 });

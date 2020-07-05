@@ -1,7 +1,6 @@
 const express = require('express');
 
 const Connection = require('../../connection');
-const objectify = require('./objectify');
 
 const router = express();
 

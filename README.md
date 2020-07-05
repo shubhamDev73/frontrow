@@ -27,5 +27,9 @@ TO-DO
   - check class
   - store ids in file?
 
-- Server
-  - API
+- API
+  - mergeParams
+  - active members
+  - timezone
+  - data upload as API
+  - post analytics
