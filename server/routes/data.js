@@ -425,7 +425,7 @@ router.post('/requests/', upload.single('requests_file'), (req, res) => {
 								if(results.length == 0){
 									// user not a member. inserting
 									sql = "INSERT INTO `member` (`user`, `group`, `join_time`)\
-									VALUES (?, ?, convert(?, datetime), ?)";
+									VALUES (?, ?, convert(?, datetime))";
 									values = [user['id'], group, user['member']['join_time']];
 									connection.execute(sql, values, res, answer);
 									connection.execute(null, null, res);
