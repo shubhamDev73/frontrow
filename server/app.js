@@ -23,8 +23,8 @@ app.use('/', index);
 const data = require('./routes/data');
 app.use('/upload/', data);
 
-const community = require('./routes/community');
-app.use('/community/', community);
+const group = require('./routes/group');
+app.use('/group/', group);
 
 const api = require('./routes/api/index');
 app.use('/api/', api);

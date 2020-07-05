@@ -9,9 +9,9 @@
 			<h2>Upload posts</h2>
 			<h4>Copy: &lt;div aria-label="News Feed"&gt;</h4>
 			Community:
-			<select name="community">
-				<% communities.forEach((community) => { %>
-				<option value="<%= community.id %>"><%= community.name %></option>
+			<select name="group">
+				<% groups.forEach((group) => { %>
+				<option value="<%= group.id %>"><%= group.name %></option>
 				<% }); %>
 			</select><br />
 			Posts File: <input name="posts_file" type="file" /><br />
@@ -24,9 +24,9 @@
 			<h2>Upload members</h2>
 			<h4>Copy: &lt;div id="groupsMemberBrowser"&gt;</h4>
 			Community:
-			<select name="community">
-				<% communities.forEach((community) => { %>
-				<option value="<%= community.id %>"><%= community.name %></option>
+			<select name="group">
+				<% groups.forEach((group) => { %>
+				<option value="<%= group.id %>"><%= group.name %></option>
 				<% }); %>
 			</select><br />
 			Members File: <input name="members_file" type="file" /><br />
@@ -39,9 +39,9 @@
 			<h2>Upload requests</h2>
 			<h4>Copy: &lt;div id="member_requests_pagelet"&gt;</h4>
 			Community:
-			<select name="community">
-				<% communities.forEach((community) => { %>
-				<option value="<%= community.id %>"><%= community.name %></option>
+			<select name="group">
+				<% groups.forEach((group) => { %>
+				<option value="<%= group.id %>"><%= group.name %></option>
 				<% }); %>
 			</select><br />
 			Requests File: <input name="requests_file" type="file" /><br />

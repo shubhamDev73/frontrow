@@ -10,31 +10,38 @@ CREATE TABLE `user` (
   `study` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT null
 );
 
-CREATE TABLE `community` (
+CREATE TABLE `group` (
   `id` bigint PRIMARY KEY COMMENT 'facebook id',
   `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci UNIQUE,
   `created_on` datetime NOT NULL
 );
 
-CREATE TABLE `activity` (
+CREATE TABLE `member` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `user` bigint,
-  `community` bigint,
+  `group` bigint,
   `join_time` datetime NOT NULL,
   `leave_time` datetime DEFAULT null,
-  `user_type` ENUM ('member', 'admin', 'moderator', 'creator', 'banned') DEFAULT "member"
+  `member_type` ENUM ('member', 'admin', 'moderator', 'creator', 'banned') DEFAULT "member"
 );
 
 CREATE TABLE `answer` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
-  `activity` int,
+  `member` int,
   `question` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `answer` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
 );
 
+CREATE TABLE `member_change` (
+  `id` int PRIMARY KEY AUTO_INCREMENT,
+  `member` int,
+  `time` datetime NOT NULL,
+  `member_type` ENUM ('member', 'admin', 'moderator', 'creator', 'banned') NOT NULL
+);
+
 CREATE TABLE `post` (
   `id` bigint PRIMARY KEY COMMENT 'facebook id',
-  `community` bigint,
+  `group` bigint,
   `user` bigint,
   `time` datetime NOT NULL,
   `type` ENUM ('post', 'shared_a_post', 'shared_a_link', 'first_post') DEFAULT "post",
@@ -53,13 +60,15 @@ CREATE TABLE `comment` (
   `likes` int NOT NULL
 );
 
-ALTER TABLE `activity` ADD FOREIGN KEY (`user`) REFERENCES `user` (`id`);
+ALTER TABLE `member` ADD FOREIGN KEY (`user`) REFERENCES `user` (`id`);
 
-ALTER TABLE `activity` ADD FOREIGN KEY (`community`) REFERENCES `community` (`id`);
+ALTER TABLE `member` ADD FOREIGN KEY (`group`) REFERENCES `group` (`id`);
 
-ALTER TABLE `answer` ADD FOREIGN KEY (`activity`) REFERENCES `activity` (`id`);
+ALTER TABLE `answer` ADD FOREIGN KEY (`member`) REFERENCES `member` (`id`);
 
-ALTER TABLE `post` ADD FOREIGN KEY (`community`) REFERENCES `community` (`id`);
+ALTER TABLE `member_change` ADD FOREIGN KEY (`member`) REFERENCES `member` (`id`);
+
+ALTER TABLE `post` ADD FOREIGN KEY (`group`) REFERENCES `group` (`id`);
 
 ALTER TABLE `post` ADD FOREIGN KEY (`user`) REFERENCES `user` (`id`);
 

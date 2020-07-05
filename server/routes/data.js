@@ -27,14 +27,14 @@ router.get('/', (req, res) => {
 	const connection = new Connection();
 	connection.connect(() => {
 		connection.queries = 1;
-		connection.execute("SELECT * FROM `community`", [], null, (results) => {
-			res.render('data', {'communities': results});
+		connection.execute("SELECT * FROM `group`", [], null, (results) => {
+			res.render('data', {'groups': results});
 		});
 	});
 });
 
 router.post('/posts/', upload.single('posts_file'), (req, res) => {
-	const community = Number(req.body.community);
+	const group = Number(req.body.group);
 	const number = Number(req.body.posts_number);
 
 	var errors = [];
@@ -155,16 +155,16 @@ router.post('/posts/', upload.single('posts_file'), (req, res) => {
 						};
 
 						// inserting/updating post
-						connection.execute("SELECT `id` FROM `post` WHERE `id` = ? AND `community` = ?", [post['id'], community], res, (results) => {
+						connection.execute("SELECT `id` FROM `post` WHERE `id` = ? AND `group` = ?", [post['id'], group], res, (results) => {
 							if(results.length == 0){
 								// post not found. inserting
-								var sql = "INSERT INTO `post` (`id`, `community`, `user`, `time`, `type`, `text`, `likes`, `shares`) VALUES (?, ?, ?, convert(?, datetime), ?, ?, ?, ?);";
-								var values = [post['id'], community, post['user'], post['time'], post['type'], post['text'], post['likes'], post['shares']];
+								var sql = "INSERT INTO `post` (`id`, `group`, `user`, `time`, `type`, `text`, `likes`, `shares`) VALUES (?, ?, ?, convert(?, datetime), ?, ?, ?, ?);";
+								var values = [post['id'], group, post['user'], post['time'], post['type'], post['text'], post['likes'], post['shares']];
 								connection.execute(sql, values, res, comment);
 							}else{
 								// post found. updating
-								var sql = "UPDATE `post` SET `user` = ?, `time` = ?, `type` = ?, `text` = ?, `likes` = ?, `shares` = ? WHERE `id` = ? AND `community` = ?;";
-								var values = [post['user'], post['time'], post['type'], post['text'], post['likes'], post['shares'], post['id'], community];
+								var sql = "UPDATE `post` SET `user` = ?, `time` = ?, `type` = ?, `text` = ?, `likes` = ?, `shares` = ? WHERE `id` = ? AND `group` = ?;";
+								var values = [post['user'], post['time'], post['type'], post['text'], post['likes'], post['shares'], post['id'], group];
 								connection.execute(sql, values, res, comment);
 							}
 						});
@@ -178,7 +178,7 @@ router.post('/posts/', upload.single('posts_file'), (req, res) => {
 });
 
 router.post('/members/', upload.single('members_file'), (req, res) => {
-	const community = Number(req.body.community);
+	const group = Number(req.body.group);
 	const number = Number(req.body.members_number);
 
 	var errors = [];
@@ -217,7 +217,7 @@ router.post('/members/', upload.single('members_file'), (req, res) => {
 				connection.connect(() => {
 					const users = JSON.parse(data);
 					connection.queries = 1 + 5 * users.length;
-					connection.execute("SELECT `user` FROM `activity` WHERE `community` = ? AND `leave_time` IS NULL;", [community], res, (results) => {
+					connection.execute("SELECT `user` FROM `member` WHERE `group` = ? AND `leave_time` IS NULL;", [group], res, (results) => {
 						var existing_users = results.map((result) => {return result.user});
 						users.forEach((user) => {
 
@@ -225,29 +225,29 @@ router.post('/members/', upload.single('members_file'), (req, res) => {
 							if(index >= 0)
 								existing_users.splice(index, 1);
 
-							// inserting/updating activity
-							const activity = (results) => {
-								var sql = "SELECT `user_type` FROM `activity` WHERE `user` = ? AND `community` = ? AND `leave_time` IS NULL;";
-								var values = [user['id'], community];
+							// inserting/updating member
+							const member = (results) => {
+								var sql = "SELECT `id`, `member_type` FROM `member` WHERE `user` = ? AND `group` = ? AND `leave_time` IS NULL;";
+								var values = [user['id'], group];
 								connection.execute(sql, values, res, (results) => {
 									if(results.length == 0){
-										// user not present in group activity. inserting
-										sql = "INSERT INTO `activity` (`user`, `community`, `join_time`, `user_type`)\
+										// user not a member. inserting
+										sql = "INSERT INTO `member` (`user`, `group`, `join_time`, `member_type`)\
 										VALUES (?, ?, convert(?, datetime), ?)";
-										values = [user['id'], community, user['join_time'], user['type']];
+										values = [user['id'], group, user['join_time'], user['type']];
 										connection.execute(sql, values, res);
 										connection.execute(null, null, res);
 									}else{
-										// user present in group activity
-										if(results[0].user_type != user['type']){
-											// user type changed. updating
-											sql = "UPDATE `activity` SET `leave_time` = convert(?, datetime) WHERE `user` = ? AND `community` = ?;";
-											values = [new Date(), user['id'], community];
+										// user already a member
+										if(results[0].member_type != user['type']){
+											// member type changed. inserting in member_change
+											const member_id = results[0].id;
+											sql = "INSERT `member_change` (`member`, `time`, `member_type`) VALUES (?, convert(?, datetime), ?);";
+											values = [member_id, new Date(), user['type']];
 											connection.execute(sql, values, res, (results) => {
-												// creating new activity with new user_type
-												sql = "INSERT INTO `activity` (`user`, `community`, `join_time`, `user_type`)\
-												VALUES (?, ?, convert(?, datetime), ?)";
-												values = [user['id'], community, new Date(), user['type']];
+												// updating member member_type
+												sql = "UPDATE `member` SET `member_type` = ? WHERE `id` = ?;";
+												values = [user['type'], member_id];
 												connection.execute(sql, values, res);
 											});
 										}else{
@@ -265,18 +265,18 @@ router.post('/members/', upload.single('members_file'), (req, res) => {
 									var sql = "INSERT INTO `user` (`id`, `name`, `is_page`, `join_time`, `friends`, `groups`, `lives`, `work`, `study`)\
 									VALUES (?, ?, ?, convert(?, datetime), ?, ?, ?, ?, ?)";
 									var values = [user['id'], user['name'], user['is_page'], user['join_time'], user['friends'], user['groups'], user['lives'], user['work'], user['study']];
-									connection.execute(sql, values, res, activity);
+									connection.execute(sql, values, res, member);
 								}else{
 									// user found. updating
 									var sql = "UPDATE `user` SET `name` = ?, `is_page` = ?, `join_time` = ?, `friends` = ?, `groups` = ?, `lives` = ?, `work` = ?, `study` = ? WHERE `id` = ?";
 									var values = [user['name'], user['is_page'], user['join_time'], user['friends'], user['groups'], user['lives'], user['work'], user['study'], user['id']];
-									connection.execute(sql, values, res, activity);
+									connection.execute(sql, values, res, member);
 								}
 							});
 						});
 						connection.queries += existing_users.length;
 						existing_users.forEach((user) => {
-							connection.execute("UPDATE `activity` SET `leave_time` = convert(?, datetime) WHERE `user` = ? AND `community` = ? AND `leave_time` IS NULL;", [new Date(), user, community], res);
+							connection.execute("UPDATE `member` SET `leave_time` = convert(?, datetime) WHERE `user` = ? AND `group` = ? AND `leave_time` IS NULL;", [new Date(), user, group], res);
 						});
 					});
 				});
@@ -288,7 +288,7 @@ router.post('/members/', upload.single('members_file'), (req, res) => {
 });
 
 router.post('/requests/', upload.single('requests_file'), (req, res) => {
-	const community = Number(req.body.community);
+	const group = Number(req.body.group);
 	const number = Number(req.body.requests_number);
 
 	var errors = [];
@@ -331,31 +331,31 @@ router.post('/requests/', upload.single('requests_file'), (req, res) => {
 
 						// inserting/updating answers
 						const answer = (results) => {
-							var sql = "SELECT `id` FROM `activity` WHERE `user` = ? AND `community` = ? AND `leave_time` IS NULL;";
-							var values = [user['id'], community];
-							connection.queries += 2 * user['activity']['question'].length;
+							var sql = "SELECT `id` FROM `member` WHERE `user` = ? AND `group` = ? AND `leave_time` IS NULL;";
+							var values = [user['id'], group];
+							connection.queries += 2 * user['member']['question'].length;
 							connection.execute(sql, values, res, (results) => {
 								if(results.length == 1){
-									const activity_id = results[0].id;
-									for (let j = 0; j < user['activity']['question'].length; j++) {
-										sql = "SELECT `id` FROM `answer` WHERE `activity` = ? AND `question` = ?;";
-										values = [activity_id, user['activity']['question'][j]];
+									const member_id = results[0].id;
+									for (let j = 0; j < user['member']['question'].length; j++) {
+										sql = "SELECT `id` FROM `answer` WHERE `member` = ? AND `question` = ?;";
+										values = [member_id, user['member']['question'][j]];
 										connection.execute(sql, values, res, (results) => {
 											if(results.length == 0){
 												// user's question not found. inserting
-												sql = "INSERT INTO `answer` (`activity`, `question`, `answer`) VALUES (?, ?, ?);";
-												values = [activity_id, user['activity']['question'][j], user['activity']['answer'][j]];
+												sql = "INSERT INTO `answer` (`member`, `question`, `answer`) VALUES (?, ?, ?);";
+												values = [member_id, user['member']['question'][j], user['member']['answer'][j]];
 												connection.execute(sql, values, res);
 											}else{
 												// user's question found. updating answer
 												sql = "UPDATE `answer` SET `answer` = ? WHERE `id` = ?;";
-												values = [user['activity']['answer'][j], results[0].id];
+												values = [user['member']['answer'][j], results[0].id];
 												connection.execute(sql, values, res);
 											}
 										});
 									}
 								}else{
-									for (var j = 0; j < user['activity']['question'].length; j++) {
+									for (var j = 0; j < user['member']['question'].length; j++) {
 										connection.execute(null, null, res);
 										connection.execute(null, null, res);
 									}
@@ -363,29 +363,29 @@ router.post('/requests/', upload.single('requests_file'), (req, res) => {
 							});
 						};
 
-						// inserting/updating activity
-						const activity = (results) => {
-							var sql = "SELECT `user_type` FROM `activity` WHERE `user` = ? AND `community` = ? AND `leave_time` IS NULL;";
-							var values = [user['id'], community];
+						// inserting/updating member
+						const member = (results) => {
+							var sql = "SELECT `id`, `member_type` FROM `member` WHERE `user` = ? AND `group` = ? AND `leave_time` IS NULL;";
+							var values = [user['id'], group];
 							connection.execute(sql, values, res, (results) => {
 								if(results.length == 0){
-									// user not present in group activity. inserting
-									sql = "INSERT INTO `activity` (`user`, `community`, `join_time`, `user_type`)\
+									// user not a member. inserting
+									sql = "INSERT INTO `member` (`user`, `group`, `join_time`, `member_type`)\
 									VALUES (?, ?, convert(?, datetime), ?)";
-									values = [user['id'], community, user['activity']['join_time'], user['type']];
+									values = [user['id'], group, user['member']['join_time'], user['type']];
 									connection.execute(sql, values, res, answer);
 									connection.execute(null, null, res);
 								}else{
-									// user present in group activity
-									if(results[0].user_type != user['type']){
-										// user type changed. updating
-										sql = "UPDATE `activity` SET `leave_time` = convert(?, datetime) WHERE `user` = ? AND `community` = ?;";
-										values = [new Date(), user['id'], community];
+									// user already a member
+									if(results[0].member_type != user['type']){
+										// member type changed. inserting in member_change
+										const member_id = results[0].id;
+										sql = "INSERT `member_change` (`member`, `time`, `member_type`) VALUES (?, convert(?, datetime), ?);";
+										values = [member_id, new Date(), user['type']];
 										connection.execute(sql, values, res, (results) => {
-											// creating new activity with new user_type
-											sql = "INSERT INTO `activity` (`user`, `community`, `join_time`, `user_type`)\
-											VALUES (?, ?, convert(?, datetime), ?)";
-											values = [user['id'], community, new Date(), user['type']];
+											// updating member member_type
+											sql = "UPDATE `member` SET `member_type` = ? WHERE `id` = ?;";
+											values = [user['type'], member_id];
 											connection.execute(sql, values, res, answer);
 										});
 									}else{
@@ -403,12 +403,12 @@ router.post('/requests/', upload.single('requests_file'), (req, res) => {
 								var sql = "INSERT INTO `user` (`id`, `name`, `is_page`, `join_time`, `friends`, `groups`, `lives`, `work`, `study`)\
 								VALUES (?, ?, ?, convert(?, datetime), ?, ?, ?, ?, ?)";
 								var values = [user['id'], user['name'], user['is_page'], user['join_time'], user['friends'], user['groups'], user['lives'], user['work'], user['study']];
-								connection.execute(sql, values, res, activity);
+								connection.execute(sql, values, res, member);
 							}else{
 								// user found. updating
 								var sql = "UPDATE `user` SET `name` = ?, `is_page` = ?, `join_time` = ?, `friends` = ?, `groups` = ?, `lives` = ?, `work` = ?, `study` = ? WHERE `id` = ?";
 								var values = [user['name'], user['is_page'], user['join_time'], user['friends'], user['groups'], user['lives'], user['work'], user['study'], user['id']];
-								connection.execute(sql, values, res, activity);
+								connection.execute(sql, values, res, member);
 							}
 						});
 					});

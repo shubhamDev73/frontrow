@@ -1,7 +1,7 @@
 from essentials import is_empty, get_id, get_num, get_parent, get_time, get_date
 
 def get_answer(user, text, is_answer):
-    user['activity']['answer' if is_answer else 'question'].append(text)
+    user['member']['answer' if is_answer else 'question'].append(text)
     return not is_answer
 
 def extract_data(request):
@@ -18,7 +18,7 @@ def extract_data(request):
         "lives": "",
         "work": "",
         "study": "",
-        "activity": {
+        "member": {
             "join_time": "",
             "question": [],
             "answer": [],
@@ -42,7 +42,7 @@ def extract_data(request):
             if info != "Requested ":
                 print("Invited by: %s" % info[11:])
         elif index == 2:
-            user['activity']['join_time'] = get_time(info)
+            user['member']['join_time'] = get_time(info)
         elif index == 3:
             if is_empty(info):
                 group_index += 1

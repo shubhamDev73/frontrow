@@ -10,22 +10,22 @@ Table user {
   study varchar(200) [default: null]
 }
 
-Table community {
+Table group {
   id bigint [pk, note: 'facebook id']
   name varchar(50) [unique]
   created_on datetime [not null]
 }
 
-Table activity {
+Table member {
   id int [pk, increment]
   user bigint [ref: > user.id]
-  community bigint [ref: > community.id]
+  group bigint [ref: > group.id]
   join_time datetime [not null]
   leave_time datetime [default: null]
-  user_type user_type [default: 'member']
+  member_type member_type [default: 'member']
 }
 
-Enum user_type {
+Enum member_type {
   member
   admin
   moderator
@@ -35,14 +35,21 @@ Enum user_type {
 
 Table answer {
   id int [pk, increment]
-  activity int [ref: > activity.id]
+  member int [ref: > member.id]
   question varchar(100) [not null]
   answer varchar(100) [not null]
 }
 
+Table member_change {
+  id int [pk, increment]
+  member int [ref: > member.id]
+  time datetime [not null]
+  member_type member_type [not null]
+}
+
 Table post {
   id bigint [pk, note: 'facebook id']
-  community bigint [ref: > community.id]
+  group bigint [ref: > group.id]
   user bigint [ref: > user.id]
   time datetime [not null]
   type post_type [default: 'post']
