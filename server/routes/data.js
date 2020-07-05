@@ -255,21 +255,9 @@ router.post('/members/', upload.single('members_file'), (req, res) => {
 											connection.execute(sql, [member_id], res, (results) => {
 												if(results.length == 0){
 													// special_member not found. inserting
-													sql = "INSERT INTO `special_member` (`member`, `join_time`, `member_type`) VALUES (?, convert(?, datetime), ?);";
-													values = [member_id, new Date(), user['type']];
-													connection.execute(sql, values, res, (results) => {
-														// updating member member_type
-														sql = "UPDATE `member` SET `member_type` = ? WHERE `id` = ?;";
-														values = [user['type'], member_id];
-														connection.execute(sql, values, res);
+													if(user['type'] == "member"){
 														connection.execute(null, null, res);
-													});
-												}else{
-													// special_member found. updating
-													sql = "UPDATE `special_member` SET `leave_time` = convert(?, datetime) WHERE `id` = ?;";
-													values = [new Date(), results[0].id];
-													connection.execute(sql, values, res, (results) => {
-														// inserting new special_member
+													}else{
 														sql = "INSERT INTO `special_member` (`member`, `join_time`, `member_type`) VALUES (?, convert(?, datetime), ?);";
 														values = [member_id, new Date(), user['type']];
 														connection.execute(sql, values, res, (results) => {
@@ -277,6 +265,26 @@ router.post('/members/', upload.single('members_file'), (req, res) => {
 															sql = "UPDATE `member` SET `member_type` = ? WHERE `id` = ?;";
 															values = [user['type'], member_id];
 															connection.execute(sql, values, res);
+															connection.execute(null, null, res);
+														});
+													}
+												}else{
+													// special_member found. updating
+													sql = "UPDATE `special_member` SET `leave_time` = convert(?, datetime) WHERE `id` = ?;";
+													values = [new Date(), results[0].id];
+													connection.execute(sql, values, res, (results) => {
+														// updating member member_type
+														sql = "UPDATE `member` SET `member_type` = ? WHERE `id` = ?;";
+														values = [user['type'], member_id];
+														connection.execute(sql, values, res, (results) => {
+															// inserting new special_member
+															if(user['type'] == "member"){
+																connection.execute(null, null, res);
+															}else{
+																sql = "INSERT INTO `special_member` (`member`, `join_time`, `member_type`) VALUES (?, convert(?, datetime), ?);";
+																values = [member_id, new Date(), user['type']];
+																connection.execute(sql, values, res);
+															}
 														});
 													});
 												}
