@@ -216,7 +216,7 @@ router.post('/members/', upload.single('members_file'), (req, res) => {
 
 				connection.connect(() => {
 					const users = JSON.parse(data);
-					connection.queries = 1 + 5 * users.length;
+					connection.queries = 1 + 6 * users.length;
 					connection.execute("SELECT `user` FROM `member` WHERE `group` = ? AND `leave_time` IS NULL;", [group], res, (results) => {
 						var existing_users = results.map((result) => {return result.user});
 						users.forEach((user) => {
@@ -235,22 +235,54 @@ router.post('/members/', upload.single('members_file'), (req, res) => {
 										sql = "INSERT INTO `member` (`user`, `group`, `join_time`, `member_type`)\
 										VALUES (?, ?, convert(?, datetime), ?)";
 										values = [user['id'], group, user['join_time'], user['type']];
-										connection.execute(sql, values, res);
-										connection.execute(null, null, res);
+										connection.execute(sql, values, res, (results) => {
+											if(user['type'] == "member"){
+												connection.execute(null, null, res);
+											}else{
+												sql = "INSERT INTO `special_member` (`member`, `join_time`, `member_type`)\
+												VALUES (?, convert(?, datetime), ?)";
+												values = [results.insertId, user['join_time'], user['type']];
+												connection.execute(sql, values, res);
+											}
+											connection.execute(null, null, res);
+										});
 									}else{
 										// user already a member
 										if(results[0].member_type != user['type']){
-											// member type changed. inserting in member_change
+											// member type changed. inserting/updating+inserting special_member
 											const member_id = results[0].id;
-											sql = "INSERT `member_change` (`member`, `time`, `member_type`) VALUES (?, convert(?, datetime), ?);";
-											values = [member_id, new Date(), user['type']];
-											connection.execute(sql, values, res, (results) => {
-												// updating member member_type
-												sql = "UPDATE `member` SET `member_type` = ? WHERE `id` = ?;";
-												values = [user['type'], member_id];
-												connection.execute(sql, values, res);
+											sql = "SELECT `id` FROM `special_member` WHERE `member` = ? AND `leave_time` IS NULL;";
+											connection.execute(sql, [member_id], res, (results) => {
+												if(results.length == 0){
+													// special_member not found. inserting
+													sql = "INSERT INTO `special_member` (`member`, `join_time`, `member_type`) VALUES (?, convert(?, datetime), ?);";
+													values = [member_id, new Date(), user['type']];
+													connection.execute(sql, values, res, (results) => {
+														// updating member member_type
+														sql = "UPDATE `member` SET `member_type` = ? WHERE `id` = ?;";
+														values = [user['type'], member_id];
+														connection.execute(sql, values, res);
+														connection.execute(null, null, res);
+													});
+												}else{
+													// special_member found. updating
+													sql = "UPDATE `special_member` SET `leave_time` = convert(?, datetime) WHERE `id` = ?;";
+													values = [new Date(), results[0].id];
+													connection.execute(sql, values, res, (results) => {
+														// inserting new special_member
+														sql = "INSERT INTO `special_member` (`member`, `join_time`, `member_type`) VALUES (?, convert(?, datetime), ?);";
+														values = [member_id, new Date(), user['type']];
+														connection.execute(sql, values, res, (results) => {
+															// updating member member_type
+															sql = "UPDATE `member` SET `member_type` = ? WHERE `id` = ?;";
+															values = [user['type'], member_id];
+															connection.execute(sql, values, res);
+														});
+													});
+												}
 											});
 										}else{
+											connection.execute(null, null, res);
 											connection.execute(null, null, res);
 											connection.execute(null, null, res);
 										}
@@ -370,28 +402,15 @@ router.post('/requests/', upload.single('requests_file'), (req, res) => {
 							connection.execute(sql, values, res, (results) => {
 								if(results.length == 0){
 									// user not a member. inserting
-									sql = "INSERT INTO `member` (`user`, `group`, `join_time`, `member_type`)\
+									sql = "INSERT INTO `member` (`user`, `group`, `join_time`)\
 									VALUES (?, ?, convert(?, datetime), ?)";
-									values = [user['id'], group, user['member']['join_time'], user['type']];
+									values = [user['id'], group, user['member']['join_time']];
 									connection.execute(sql, values, res, answer);
 									connection.execute(null, null, res);
 								}else{
 									// user already a member
-									if(results[0].member_type != user['type']){
-										// member type changed. inserting in member_change
-										const member_id = results[0].id;
-										sql = "INSERT `member_change` (`member`, `time`, `member_type`) VALUES (?, convert(?, datetime), ?);";
-										values = [member_id, new Date(), user['type']];
-										connection.execute(sql, values, res, (results) => {
-											// updating member member_type
-											sql = "UPDATE `member` SET `member_type` = ? WHERE `id` = ?;";
-											values = [user['type'], member_id];
-											connection.execute(sql, values, res, answer);
-										});
-									}else{
-										connection.execute(null, null, res, answer);
-										connection.execute(null, null, res);
-									}
+									connection.execute(null, null, res, answer);
+									connection.execute(null, null, res);
 								}
 							});
 						};

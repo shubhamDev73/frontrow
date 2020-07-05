@@ -40,10 +40,11 @@ Table answer {
   answer varchar(100) [not null]
 }
 
-Table member_change {
+Table special_member {
   id int [pk, increment]
   member int [ref: > member.id]
-  time datetime [not null]
+  join_time datetime [not null]
+  leave_time datetime [default: null]
   member_type member_type [not null]
 }
 

@@ -32,11 +32,12 @@ CREATE TABLE `answer` (
   `answer` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
 );
 
-CREATE TABLE `member_change` (
+CREATE TABLE `special_member` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `member` int,
-  `time` datetime NOT NULL,
-  `member_type` ENUM ('member', 'admin', 'moderator', 'creator', 'banned') NOT NULL
+  `join_time` datetime NOT NULL,
+  `leave_time` datetime DEFAULT NULL,
+  `member_type` ENUM ('admin', 'moderator', 'creator', 'banned') NOT NULL
 );
 
 CREATE TABLE `post` (
@@ -66,7 +67,7 @@ ALTER TABLE `member` ADD FOREIGN KEY (`group`) REFERENCES `group` (`id`);
 
 ALTER TABLE `answer` ADD FOREIGN KEY (`member`) REFERENCES `member` (`id`);
 
-ALTER TABLE `member_change` ADD FOREIGN KEY (`member`) REFERENCES `member` (`id`);
+ALTER TABLE `special_member` ADD FOREIGN KEY (`member`) REFERENCES `member` (`id`);
 
 ALTER TABLE `post` ADD FOREIGN KEY (`group`) REFERENCES `group` (`id`);
 
