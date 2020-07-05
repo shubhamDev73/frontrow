@@ -99,11 +99,11 @@ router.get('/present/', (req, res) => {
 	connection.connect(() => {
 		connection.queries = 1;
 		if(req.query.type){
-			connection.execute("SELECT `join_time` FROM `member` WHERE `group` = ? AND (`leave_time` IS NULL OR `leave_time` >= ?) AND `member_type` = ? ORDER BY `join_time`;", [group.id, dates[1], req.query.type], res, (results) => {
+			connection.execute("SELECT `join_time`, `leave_time` FROM `member` WHERE `group` = ? AND `member_type` = ? ORDER BY `join_time`;", [group.id, req.query.type], res, (results) => {
 				connection.response = essentials.periodify(results, 'join_time', dates, true, req.query.period);
 			});
 		}else{
-			connection.execute("SELECT `join_time` FROM `member` WHERE `group` = ? AND (`leave_time` IS NULL OR `leave_time` >= ?) ORDER BY `join_time`;", [group.id, dates[1]], res, (results) => {
+			connection.execute("SELECT `join_time`, `leave_time` FROM `member` WHERE `group` = ? ORDER BY `join_time`;", [group.id], res, (results) => {
 				connection.response = essentials.periodify(results, 'join_time', dates, true, req.query.period);
 			});
 		}
