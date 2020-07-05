@@ -314,9 +314,23 @@ router.post('/members/', upload.single('members_file'), (req, res) => {
 								}
 							});
 						});
-						connection.queries += existing_users.length;
+						connection.queries += 3 * existing_users.length;
 						existing_users.forEach((user) => {
-							connection.execute("UPDATE `member` SET `leave_time` = convert(?, datetime) WHERE `user` = ? AND `group` = ? AND `leave_time` IS NULL;", [new Date(), user, group], res);
+							var sql = "SELECT `id`, `member_type` FROM `member` WHERE `user` = ? AND `group` = ? AND `leave_time` IS NULL;";
+							var values = [user, group];
+							connection.execute(sql, values, res, (results) => {
+								if(results[0].member_type == "member"){
+									connection.execute(null, null, res);
+								}else{
+									// special_member. updating
+									sql = "UPDATE `special_member` SET `leave_time` = convert(?, datetime) WHERE `member` = ? AND `leave_time` IS NULL;";
+									values = [new Date(), results[0].id];
+									connection.execute(sql, values, res);
+								}
+								sql = "UPDATE `member` SET `leave_time` = convert(?, datetime) WHERE `user` = ? AND `group` = ? AND `leave_time` IS NULL;";
+								values = [new Date(), user, group];
+								connection.execute(sql, values, res);
+							});
 						});
 					});
 				});

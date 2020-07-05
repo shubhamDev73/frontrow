@@ -31,5 +31,6 @@ TO-DO
   - mergeParams
   - active members
   - timezone
+  - only date in count response
   - data upload as API
   - post analytics
