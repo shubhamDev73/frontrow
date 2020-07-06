@@ -1,0 +1,22 @@
+const express = require('express');
+
+const Connection = require('../../../connection');
+
+const router = express();
+
+const group = {
+	id: 0,
+};
+
+router.get('/', (req, res) => {
+	const connection = new Connection();
+	connection.connect(() => {
+		connection.queries = 1;
+		connection.execute("SELECT * FROM `post` WHERE `group` = ?;", [group.id], res, (results) => {
+			connection.response = results;
+		});
+	});
+});
+
+module.exports.router = router;
+module.exports.group = group;

@@ -1,7 +1,7 @@
 const express = require('express');
 
-const Connection = require('../../connection');
-const essentials = require('./essentials');
+const Connection = require('../../../connection');
+const essentials = require('../essentials');
 
 const router = express();
 

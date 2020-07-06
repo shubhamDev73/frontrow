@@ -1,6 +1,6 @@
 const express = require('express');
 
-const Connection = require('../../connection');
+const Connection = require('../../../connection');
 
 const router = express();
 

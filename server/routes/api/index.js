@@ -13,10 +13,10 @@ router.use('/docs/', (req, res) => {
 	res.render('docs');
 });
 
-const groups = require('./groups');
+const groups = require('./groups/index');
 router.use('/groups/', groups);
 
-const users = require('./users');
+const users = require('./users/index');
 router.use('/users/', users);
 
 module.exports = router;
