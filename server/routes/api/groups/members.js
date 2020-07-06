@@ -121,5 +121,21 @@ router.get('/present/list/', (req, res) => {
 	});
 });
 
+router.get('/list/', (req, res) => {
+	const connection = new Connection();
+	connection.connect(() => {
+		connection.queries = 1;
+		if(req.query.type){
+			connection.execute("SELECT m.`user` as `id`, s.`join_time`, s.`member_type` FROM `member` m, `special_member` s WHERE s.`member` = m.`id` AND m.`group` = ? AND s.`leave_time` IS NULL AND s.`member_type` = ? ORDER BY s.`join_time` DESC;", [group.id, req.query.type], res, (results) => {
+				connection.response = results;
+			});
+		}else{
+			connection.execute("SELECT `user` as `id`, `join_time`, `member_type` FROM `member` WHERE `group` = ? AND `leave_time` IS NULL ORDER BY `join_time` DESC;", [group.id], res, (results) => {
+				connection.response = results;
+			});
+		}
+	});
+});
+
 module.exports.router = router;
 module.exports.group = group;
