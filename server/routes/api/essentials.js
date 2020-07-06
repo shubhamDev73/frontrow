@@ -65,7 +65,7 @@ function periodify(results, key, dates, retain, period=null){
 	}
 
 	// removing left members for retain (present members)
-	if(retain){
+	if(retain && Object.keys(results[0]).indexOf('leave_time') >= 0){
 		results.forEach((result) => {
 			if(result['leave_time']){
 				for(var i = 0; i < perioded_results.length; i++){
@@ -79,5 +79,23 @@ function periodify(results, key, dates, retain, period=null){
 	return perioded_results;
 }
 
+function count(results, key, keys){
+	var counts = {};
+	var total = 0;
+	results.forEach((result) => {
+		if(keys.indexOf(key) >= 0)
+			counts[result[key] + 's'] = result['total'];
+		total += result['total'];
+	});
+	keys.forEach((key) => {
+		if(Object.keys(counts).indexOf(key) < 0)
+			counts[key + 's'] = 0;
+	});
+	counts['total'] = total;
+
+	return counts;
+}
+
 module.exports.getDates = getDates;
 module.exports.periodify = periodify;
+module.exports.count = count;

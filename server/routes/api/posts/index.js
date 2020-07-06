@@ -19,7 +19,7 @@ router.get('/:post/', (req, res) => {
 	connection.connect(() => {
 		connection.queries = 1;
 		connection.execute("SELECT * FROM `post` WHERE `id` = ?;", [req.params.post], res, (results) => {
-			connection.response = results;
+			connection.response = results[0];
 		});
 	});
 });

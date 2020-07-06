@@ -35,3 +35,4 @@ TO-DO
   - data upload as API
   - post analytics
   - multiple data uploads
+  - member-type member?

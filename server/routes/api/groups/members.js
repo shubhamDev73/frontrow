@@ -14,13 +14,7 @@ router.get('/', (req, res) => {
 	connection.connect(() => {
 		connection.queries = 1;
 		connection.execute("SELECT `member_type`, COUNT(*) AS `total` FROM `member` WHERE `group` = ? AND `leave_time` IS NULL GROUP BY `member_type`;", [group.id], res, (results) => {
-			var total = 0;
-			connection.response = {};
-			results.forEach((result) => {
-				connection.response[result['member_type'] + 's'] = result['total'];
-				total += result['total'];
-			});
-			connection.response['total'] = total;
+			connection.response = essentials.count(results, 'member_type', ['admin', 'moderator', 'creator', 'banned']);
 		});
 	});
 });
