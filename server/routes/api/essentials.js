@@ -83,15 +83,15 @@ function count(results, param, keys=null){
 	var counts = {};
 	var total = 0;
 	results.forEach((result) => {
-		if(!keys || keys.indexOf(param) >= 0)
-			counts[result[param] + (keys ? 's' : '')] = result['total'];
+		if(!keys || keys.indexOf(result[param]) >= 0)
+			counts[result[param]] = result['total'];
 		total += result['total'];
 	});
 
 	if(keys){
 		keys.forEach((key) => {
 			if(Object.keys(counts).indexOf(key) < 0)
-				counts[key + 's'] = 0;
+				counts[key] = 0;
 		});
 	}
 
