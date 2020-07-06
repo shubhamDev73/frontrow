@@ -79,18 +79,22 @@ function periodify(results, key, dates, retain, period=null){
 	return perioded_results;
 }
 
-function count(results, key, keys){
+function count(results, key, keys=null){
 	var counts = {};
 	var total = 0;
 	results.forEach((result) => {
-		if(keys.indexOf(key) >= 0)
-			counts[result[key] + 's'] = result['total'];
+		if(!keys || keys.indexOf(key) >= 0)
+			counts[result[key] + (keys ? 's' : '')] = result['total'];
 		total += result['total'];
 	});
-	keys.forEach((key) => {
-		if(Object.keys(counts).indexOf(key) < 0)
-			counts[key + 's'] = 0;
-	});
+
+	if(keys){
+		keys.forEach((key) => {
+			if(Object.keys(counts).indexOf(key) < 0)
+				counts[key + 's'] = 0;
+		});
+	}
+
 	counts['total'] = total;
 
 	return counts;

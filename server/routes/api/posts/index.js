@@ -14,6 +14,9 @@ router.get('/', (req, res) => {
 	});
 });
 
+const user = require('./user');
+router.use('/by/', user);
+
 router.get('/:post/', (req, res) => {
 	const connection = new Connection();
 	connection.connect(() => {

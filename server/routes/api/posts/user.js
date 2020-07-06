@@ -1,0 +1,76 @@
+const express = require('express');
+
+const Connection = require('../../../connection');
+const essentials = require('../essentials');
+
+const router = express();
+
+router.get('/', (req, res) => {
+	const dates = essentials.getDates(req);
+	const connection = new Connection();
+	connection.connect(() => {
+		connection.queries = 1;
+		if(req.query.type){
+			connection.execute("SELECT `user`, COUNT(*) as `total` FROM `post` WHERE `time` BETWEEN ? AND ? AND `type` = ? GROUP BY `user`;", [dates[0], dates[1], req.query.type], res, (results) => {
+				connection.response = essentials.count(results, 'user');
+			});
+		}else{
+			connection.execute("SELECT `user`, COUNT(*) as `total` FROM `post` WHERE `time` BETWEEN ? AND ? GROUP BY `user`;", [dates[0], dates[1]], res, (results) => {
+				connection.response = essentials.count(results, 'user');
+			});
+		}
+	});
+});
+
+router.get('/:user/', (req, res) => {
+	const dates = essentials.getDates(req);
+	const connection = new Connection();
+	connection.connect(() => {
+		connection.queries = 1;
+		if(req.query.type){
+			connection.execute("SELECT COUNT(*) as `total` FROM `post` WHERE `user` = ? AND `time` BETWEEN ? AND ? AND `type` = ?;", [req.params.user, dates[0], dates[1], req.query.type], res, (results) => {
+				connection.response = results[0];
+			});
+		}else{
+			connection.execute("SELECT COUNT(*) as `total` FROM `post` WHERE `user` = ? AND `time` BETWEEN ? AND ?;", [req.params.user, dates[0], dates[1]], res, (results) => {
+				connection.response = results[0];
+			});
+		}
+	});
+});
+
+router.get('/:user/new/', (req, res) => {
+	const dates = essentials.getDates(req);
+	const connection = new Connection();
+	connection.connect(() => {
+		connection.queries = 1;
+		if(req.query.type){
+			connection.execute("SELECT `time` FROM `post` WHERE `user` = ? AND `time` BETWEEN ? AND ? AND `type` = ?;", [req.params.user, dates[0], dates[1], req.query.type], res, (results) => {
+				connection.response = essentials.periodify(results, 'time', dates, false, req.query.period);
+			});
+		}else{
+			connection.execute("SELECT `time` FROM `post` WHERE `user` = ? AND `time` BETWEEN ? AND ?;", [req.params.user, dates[0], dates[1]], res, (results) => {
+				connection.response = essentials.periodify(results, 'time', dates, false, req.query.period);
+			});
+		}
+	});
+});
+
+router.get('/:user/total/', (req, res) => {
+	const dates = essentials.getDates(req);
+	const connection = new Connection();
+	connection.connect(() => {
+		connection.queries = 1;
+		if(req.query.type){
+			connection.execute("SELECT `time` FROM `post` WHERE `user` = ? AND `time` BETWEEN ? AND ? AND `type` = ?;", [req.params.user, dates[0], dates[1], req.query.type], res, (results) => {
+				connection.response = essentials.periodify(results, 'time', dates, true, req.query.period);
+			});
+		}else{
+			connection.execute("SELECT `time` FROM `post` WHERE `user` = ? AND `time` BETWEEN ? AND ?;", [req.params.user, dates[0], dates[1]], res, (results) => {
+				connection.response = essentials.periodify(results, 'time', dates, true, req.query.period);
+			});
+		}
+	});
+});
+
+module.exports = router;
