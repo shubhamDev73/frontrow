@@ -30,9 +30,10 @@ TO-DO
   - mergeParams
   - active members
   - timezone
-  - only date in count response
+  - only date in count response?
   - end date in count response?
   - data upload as API
-  - post analytics
   - multiple data uploads
   - member-type member?
+  - likes, comments, shares graphs
+  - comments analytics
