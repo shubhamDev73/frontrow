@@ -40,18 +40,27 @@ def extract_data(element):
                 post_index -= 2
                 continue
             if post_type != '':
-                post['type'] = post_type
+                if post_type == " created a poll.":
+                    post['type'] = "poll"
+                elif post_type == " shared his first post." or post_type == " shared her first post.":
+                    post['type'] = "first"
+                elif post_type == " shared a link.":
+                    post['type'] = "link"
+                elif post_type == " shared a post.":
+                    post['type'] = "share"
+                elif post_type[:8] == " is with":
+                    post['type'] = "with"
             if get_parent(info, lambda tag: tag.has_attr("data-utime")):
                 post_index -= 3
                 post['id'] = post_id(info)
                 post['time'] = get_time(info)
                 continue
-        elif index == 3:
+        elif index == 4:
             if post['time'] != '':
                 continue
             post['id'] = post_id(info)
             post['time'] = get_time(info)
-        elif index >= 4 and index <= comment_index:
+        elif index >= 5 and index <= comment_index:
             comments = info.split(' ')
             if len(comments) > 1 and comments[1][:7] == "comment":
                 comment_index = index

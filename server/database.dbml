@@ -61,9 +61,11 @@ Table post {
 
 Enum post_type {
   post
-  shared_a_post
-  shared_a_link
-  first_post
+  poll
+  first
+  link
+  share
+  with
 }
 
 Table comment {

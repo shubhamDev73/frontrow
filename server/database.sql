@@ -45,7 +45,7 @@ CREATE TABLE `post` (
   `group` bigint,
   `user` bigint,
   `time` datetime NOT NULL,
-  `type` ENUM ('post', 'shared_a_post', 'shared_a_link', 'first_post') DEFAULT "post",
+  `type` ENUM ('post', 'poll', 'first', 'link', 'share', 'with') DEFAULT "post",
   `text` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `likes` int NOT NULL,
   `shares` int NOT NULL

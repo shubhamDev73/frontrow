@@ -8,7 +8,7 @@ router.get('/', (req, res) => {
 	const connection = new Connection();
 	connection.connect(() => {
 		connection.queries = 1;
-		connection.execute("SELECT * FROM `group`", null, res, (results) => {
+		connection.execute("SELECT * FROM `group`;", null, res, (results) => {
 			connection.response = results;
 		});
 	});
@@ -18,7 +18,7 @@ router.get('/:group/', (req, res) => {
 	const connection = new Connection();
 	connection.connect(() => {
 		connection.queries = 1;
-		connection.execute("SELECT * FROM `group` WHERE `id` = ?", [req.params.group], res, (results) => {
+		connection.execute("SELECT * FROM `group` WHERE `id` = ?;", [req.params.group], res, (results) => {
 			connection.response = results[0];
 		});
 	});

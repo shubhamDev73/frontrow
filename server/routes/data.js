@@ -43,7 +43,7 @@ router.post('/posts/', upload.single('posts_file'), (req, res) => {
 	console.log("Executing 'posts.py'.......");
 
 	script.stdout.on('data', (data) => {
-		data.toString().split('\r\n').forEach((line) => {if(line) console.log("-> " + line);});
+		data.toString().replace(/\r/g, '').split('\n').forEach((line) => {if(line) console.log("-> " + line);});
 	});
 
 	script.stderr.on('data', (data) => {
@@ -72,7 +72,7 @@ router.post('/posts/', upload.single('posts_file'), (req, res) => {
 
 				connection.connect(() => {
 					const posts = JSON.parse(data);
-					connection.queries = 2 * posts.length;
+					connection.queries = 1 + 2 * posts.length;
 					posts.forEach((post) => {
 
 						if(post['error']){
@@ -169,6 +169,7 @@ router.post('/posts/', upload.single('posts_file'), (req, res) => {
 							}
 						});
 					});
+					connection.execute(null, null, res);
 				});
 			});
 		}else{
@@ -187,7 +188,7 @@ router.post('/members/', upload.single('members_file'), (req, res) => {
 	console.log("Executing 'members.py'.......");
 
 	script.stdout.on('data', (data) => {
-		data.toString().split('\r\n').forEach((line) => {if(line) console.log("-> " + line);});
+		data.toString().replace(/\r/g, '').split('\n').forEach((line) => {if(line) console.log("-> " + line);});
 	});
 
 	script.stderr.on('data', (data) => {
@@ -351,7 +352,7 @@ router.post('/requests/', upload.single('requests_file'), (req, res) => {
 	console.log("Executing 'member_requests.py'.......");
 
 	script.stdout.on('data', (data) => {
-		data.toString().split('\r\n').forEach((line) => {if(line) console.log("-> " + line);});
+		data.toString().replace(/\r/g, '').split('\n').forEach((line) => {if(line) console.log("-> " + line);});
 	});
 
 	script.stderr.on('data', (data) => {
