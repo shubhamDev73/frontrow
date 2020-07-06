@@ -79,12 +79,12 @@ function periodify(results, key, dates, retain, period=null){
 	return perioded_results;
 }
 
-function count(results, key, keys=null){
+function count(results, param, keys=null){
 	var counts = {};
 	var total = 0;
 	results.forEach((result) => {
-		if(!keys || keys.indexOf(key) >= 0)
-			counts[result[key] + (keys ? 's' : '')] = result['total'];
+		if(!keys || keys.indexOf(param) >= 0)
+			counts[result[param] + (keys ? 's' : '')] = result['total'];
 		total += result['total'];
 	});
 
