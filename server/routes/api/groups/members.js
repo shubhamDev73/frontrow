@@ -53,6 +53,40 @@ router.get('/new/list/', (req, res) => {
 	});
 });
 
+router.get('/total/', (req, res) => {
+	const dates = essentials.getDates(req);
+	const connection = new Connection();
+	connection.connect(() => {
+		connection.queries = 1;
+		if(req.query.type){
+			connection.execute("SELECT s.`join_time`, s.`leave_time` FROM `member` m, `special_member` s WHERE s.`member` = m.`id` AND m.`group` = ? AND s.`member_type` = ? ORDER BY s.`join_time`;", [group.id, req.query.type], res, (results) => {
+				connection.response = essentials.periodify(results, 'join_time', dates, true, req.query.period);
+			});
+		}else{
+			connection.execute("SELECT `join_time`, `leave_time` FROM `member` WHERE `group` = ? ORDER BY `join_time`;", [group.id], res, (results) => {
+				connection.response = essentials.periodify(results, 'join_time', dates, true, req.query.period);
+			});
+		}
+	});
+});
+
+router.get('/total/list/', (req, res) => {
+	const dates = essentials.getDates(req);
+	const connection = new Connection();
+	connection.connect(() => {
+		connection.queries = 1;
+		if(req.query.type){
+			connection.execute("SELECT m.`user` as `id`, s.`join_time`, s.`member_type` FROM `member` m, `special_member` s WHERE s.`member` = m.`id` AND m.`group` = ? AND s.`join_time` <= ? AND (s.`leave_time` IS NULL OR s.`leave_time` >= ?) AND s.`member_type` = ? ORDER BY s.`join_time`;", [group.id, dates[0], dates[1], req.query.type], res, (results) => {
+				connection.response = results;
+			});
+		}else{
+			connection.execute("SELECT `user` as `id`, `join_time`, `member_type` FROM `member` WHERE `group` = ? AND `join_time` <= ? AND (`leave_time` IS NULL OR `leave_time` >= ?) ORDER BY `join_time`;", [group.id, dates[0], dates[1]], res, (results) => {
+				connection.response = results;
+			});
+		}
+	});
+});
+
 router.get('/left/', (req, res) => {
 	const dates = essentials.getDates(req);
 	const connection = new Connection();
@@ -81,40 +115,6 @@ router.get('/left/list/', (req, res) => {
 			});
 		}else{
 			connection.execute("SELECT `user` as `id`, `leave_time` FROM `member` WHERE `group` = ? AND `leave_time` BETWEEN ? AND ? ORDER BY `leave_time`;", [group.id, dates[0], dates[1]], res, (results) => {
-				connection.response = results;
-			});
-		}
-	});
-});
-
-router.get('/present/', (req, res) => {
-	const dates = essentials.getDates(req);
-	const connection = new Connection();
-	connection.connect(() => {
-		connection.queries = 1;
-		if(req.query.type){
-			connection.execute("SELECT s.`join_time`, s.`leave_time` FROM `member` m, `special_member` s WHERE s.`member` = m.`id` AND m.`group` = ? AND s.`member_type` = ? ORDER BY s.`join_time`;", [group.id, req.query.type], res, (results) => {
-				connection.response = essentials.periodify(results, 'join_time', dates, true, req.query.period);
-			});
-		}else{
-			connection.execute("SELECT `join_time`, `leave_time` FROM `member` WHERE `group` = ? ORDER BY `join_time`;", [group.id], res, (results) => {
-				connection.response = essentials.periodify(results, 'join_time', dates, true, req.query.period);
-			});
-		}
-	});
-});
-
-router.get('/present/list/', (req, res) => {
-	const dates = essentials.getDates(req);
-	const connection = new Connection();
-	connection.connect(() => {
-		connection.queries = 1;
-		if(req.query.type){
-			connection.execute("SELECT m.`user` as `id`, s.`join_time`, s.`member_type` FROM `member` m, `special_member` s WHERE s.`member` = m.`id` AND m.`group` = ? AND s.`join_time` <= ? AND (s.`leave_time` IS NULL OR s.`leave_time` >= ?) AND s.`member_type` = ? ORDER BY s.`join_time`;", [group.id, dates[0], dates[1], req.query.type], res, (results) => {
-				connection.response = results;
-			});
-		}else{
-			connection.execute("SELECT `user` as `id`, `join_time`, `member_type` FROM `member` WHERE `group` = ? AND `join_time` <= ? AND (`leave_time` IS NULL OR `leave_time` >= ?) ORDER BY `join_time`;", [group.id, dates[0], dates[1]], res, (results) => {
 				connection.response = results;
 			});
 		}

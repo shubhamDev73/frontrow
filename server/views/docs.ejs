@@ -13,7 +13,7 @@
 
 		<ul>
 			<h3><li>End points</li></h3>
-			<strong>Note:</strong> for all date related end points, if end_date is ommitted, it is taken as today. if start_date is ommitted it is taken as zero (problematic for present members as no members can be present before group was created).<br />
+			<strong>Note:</strong> for all date related end points, if end_date is ommitted, it is taken as today. if start_date is ommitted it is taken as zero (problematic for total members as no members can be present before group was created).<br />
 			<strong>Note:</strong> for period related end points, if start_date is ommitted, it is taken as date of first valid entry (no results are returned if no valid results found). if period is ommitted, it is taken as 1 day.<br />
 			<strong>Note:</strong> if type is ommitted, all types are shown.<br />
 			<strong>Note:</strong> values in &lt;&gt; are specific to the response needed and should be added without &lt; or &gt;.<br />
@@ -29,10 +29,10 @@
 				<li>/groups/&lt;group-id&gt;/members/list?type=&lt;member-type&gt; : list of members for the given group, of the given type, sorted by newest first</li>
 				<li>/groups/&lt;group-id&gt;/members/new/?type=&lt;member-type&gt;&amp;start_date=&lt;date&gt;&amp;end_date=&lt;date&gt;&amp;period=&lt;number-of-days&gt; : count of new members for the given group, of the given type, within the given time period, sorted by join_time, separated by the given period</li>
 				<li>/groups/&lt;group-id&gt;/members/new/list/?type=&lt;member-type&gt;&amp;start_date=&lt;date&gt;&amp;end_date=&lt;date&gt; : list of new members for the given group, of the given type, within the given time period, sorted by join_time</li>
+				<li>/groups/&lt;group-id&gt;/members/total/?type=&lt;member-type&gt;&amp;start_date=&lt;date&gt;&amp;end_date=&lt;date&gt;&amp;period=&lt;number-of-days&gt; : count of total members for the given group, of the given type, within the given time period, sorted by join_time, separated by the given period</li>
+				<li>/groups/&lt;group-id&gt;/members/total/list/?type=&lt;member-type&gt;&amp;start_date=&lt;date&gt;&amp;end_date=&lt;date&gt; : list of total members for the given group, of the given type, within the given time period, sorted by join_time</li>
 				<li>/groups/&lt;group-id&gt;/members/left/?type=&lt;member-type&gt;&amp;start_date=&lt;date&gt;&amp;end_date=&lt;date&gt;&amp;period=&lt;number-of-days&gt; : count of left members for the given group, of the given type, within the given time period, sorted by leave_time, separated by the given period</li>
 				<li>/groups/&lt;group-id&gt;/members/left/list/?type=&lt;member-type&gt;&amp;start_date=&lt;date&gt;&amp;end_date=&lt;date&gt; : list of left members for the given group, of the given type, within the given time period, sorted by leave_time</li>
-				<li>/groups/&lt;group-id&gt;/members/present/?type=&lt;member-type&gt;&amp;start_date=&lt;date&gt;&amp;end_date=&lt;date&gt;&amp;period=&lt;number-of-days&gt; : count of present members for the given group, of the given type, within the given time period, sorted by join_time, separated by the given period</li>
-				<li>/groups/&lt;group-id&gt;/members/present/list/?type=&lt;member-type&gt;&amp;start_date=&lt;date&gt;&amp;end_date=&lt;date&gt; : list of present members for the given group, of the given type, within the given time period, sorted by join_time</li>
 				<h3>Group posts</h3>
 				<li>/groups/&lt;group-id&gt;/posts/ : details about number of posts for the given group</li>
 				<li>/groups/&lt;group-id&gt;/posts/new/?type=&lt;post-type&gt;&amp;start_date=&lt;date&gt;&amp;end_date=&lt;date&gt;&amp;period=&lt;number-of-days&gt; : count of new posts for the given group, of the given type, within the given time period, sorted by time, separated by the given period</li>
