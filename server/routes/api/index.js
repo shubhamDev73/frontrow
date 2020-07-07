@@ -4,7 +4,7 @@ const router = express();
 
 router.get('/', (req, res) => {
 	res.json({
-		"version": "0.0.4",
+		"version": "0.0.5",
 		"message": "Root node for all API calls. If you are seeing this, everything has been setup correctly. For usage, see documentation at /api/docs/",
 	});
 });

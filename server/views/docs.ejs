@@ -5,55 +5,90 @@
 		<title></title>
 	</head>
 	<body>
-		<h1>Documentation for version: 0.0.4</h1>
-
-		<h2>Root node: /api/</h2>
+		<h1>Documentation for version: 0.0.5</h1>
 
 		<h3>Date format used (in request and response both) is YYYY-MM-DD</h3>
 
 		<ul>
 			<h3><li>End points</li></h3>
-			<strong>Note:</strong> for all date related end points, if end_date is ommitted, it is taken as today. if start_date is ommitted it is taken as zero (problematic for total members as no members can be present before group was created).<br />
-			<strong>Note:</strong> for period related end points, if start_date is ommitted, it is taken as date of first valid entry (no results are returned if no valid results found). if period is ommitted, it is taken as 1 day.<br />
-			<strong>Note:</strong> if type is ommitted, all types are shown.<br />
+			<h3><em>end-point-including-all-parent-urls (list-of-valid-query-types) : output-type, other-details</em></h3>
 			<strong>Note:</strong> values in &lt;&gt; are specific to the response needed and should be added without &lt; or &gt;.<br />
 			<br />
+			<h3>Root: /api/</h3>
 			<ul>
-				<h3>Root</h3>
-				<li>/ : root node</li>
-				<h3>Groups</h3>
-				<li>/groups/ : list of all groups</li>
-				<li>/groups/&lt;group-id&gt;/ : details about a specific group</li>
-				<h3>Group members</h3>
-				<li>/groups/&lt;group-id&gt;/members/ : details about number of members for the given group</li>
-				<li>/groups/&lt;group-id&gt;/members/list?type=&lt;member-type&gt; : list of members for the given group, of the given type, sorted by newest first</li>
-				<li>/groups/&lt;group-id&gt;/members/new/?type=&lt;member-type&gt;&amp;start_date=&lt;date&gt;&amp;end_date=&lt;date&gt;&amp;period=&lt;number-of-days&gt; : count of new members for the given group, of the given type, within the given time period, sorted by join_time, separated by the given period</li>
-				<li>/groups/&lt;group-id&gt;/members/new/list/?type=&lt;member-type&gt;&amp;start_date=&lt;date&gt;&amp;end_date=&lt;date&gt; : list of new members for the given group, of the given type, within the given time period, sorted by join_time</li>
-				<li>/groups/&lt;group-id&gt;/members/total/?type=&lt;member-type&gt;&amp;start_date=&lt;date&gt;&amp;end_date=&lt;date&gt;&amp;period=&lt;number-of-days&gt; : count of total members for the given group, of the given type, within the given time period, sorted by join_time, separated by the given period</li>
-				<li>/groups/&lt;group-id&gt;/members/total/list/?type=&lt;member-type&gt;&amp;start_date=&lt;date&gt;&amp;end_date=&lt;date&gt; : list of total members for the given group, of the given type, within the given time period, sorted by join_time</li>
-				<li>/groups/&lt;group-id&gt;/members/left/?type=&lt;member-type&gt;&amp;start_date=&lt;date&gt;&amp;end_date=&lt;date&gt;&amp;period=&lt;number-of-days&gt; : count of left members for the given group, of the given type, within the given time period, sorted by leave_time, separated by the given period</li>
-				<li>/groups/&lt;group-id&gt;/members/left/list/?type=&lt;member-type&gt;&amp;start_date=&lt;date&gt;&amp;end_date=&lt;date&gt; : list of left members for the given group, of the given type, within the given time period, sorted by leave_time</li>
-				<h3>Group posts</h3>
-				<li>/groups/&lt;group-id&gt;/posts/ : details about number of posts for the given group</li>
-				<li>/groups/&lt;group-id&gt;/posts/new/?type=&lt;post-type&gt;&amp;start_date=&lt;date&gt;&amp;end_date=&lt;date&gt;&amp;period=&lt;number-of-days&gt; : count of new posts for the given group, of the given type, within the given time period, sorted by time, separated by the given period</li>
-				<li>/groups/&lt;group-id&gt;/posts/total/?type=&lt;post-type&gt;&amp;start_date=&lt;date&gt;&amp;end_date=&lt;date&gt;&amp;period=&lt;number-of-days&gt; : count of total posts for the given group, of the given type, within the given time period, sorted by time, separated by the given period</li>
-				<li>/groups/&lt;group-id&gt;/posts/list/?type=&lt;post-type&gt;&amp;start_date=&lt;date&gt;&amp;end_date=&lt;date&gt; : list of posts for the given group, of the given type, within the given time period, sorted by time</li>
-				<li>/groups/&lt;group-id&gt;/posts/by/?type=&lt;post-type&gt;&amp;start_date=&lt;date&gt;&amp;end_date=&lt;date&gt; : number of posts by each user for the given group, of the given type, within the given time period, sorted by number of posts (decreasing order)</li>
-				<li>/groups/&lt;group-id&gt;/posts/by/&lt;user-id&gt;/?type=&lt;post-type&gt;&amp;start_date=&lt;date&gt;&amp;end_date=&lt;date&gt; : number of posts by the given user for the given group, of the given type, within the given time period, sorted by time</li>
-				<li>/groups/&lt;group-id&gt;/posts/by/&lt;user-id&gt;/new/?type=&lt;post-type&gt;&amp;start_date=&lt;date&gt;&amp;end_date=&lt;date&gt;&amp;period=&lt;number-of-days&gt; : count of new posts by the given user for the given group, of the given type, within the given time period, sorted by time, separated by the given period</li>
-				<li>/groups/&lt;group-id&gt;/posts/by/&lt;user-id&gt;/total/?type=&lt;post-type&gt;&amp;start_date=&lt;date&gt;&amp;end_date=&lt;date&gt;&amp;period=&lt;number-of-days&gt; : count of total posts by the given user for the given group, of the given type, within the given time period, sorted by time, separated by the given period</li>
-				<li>/groups/&lt;group-id&gt;/posts/by/&lt;user-id&gt;/list/?type=&lt;post-type&gt;&amp;start_date=&lt;date&gt;&amp;end_date=&lt;date&gt; : list of posts by the given user for the given group, of the given type, within the given time period, sorted by time</li>
-				<h3>Users</h3>
-				<li>/users/ : number of all users</li>
-				<li>/users/&lt;user-id&gt;/ : details about a specific user</li>
-				<h3>Posts</h3>
-				<li>/posts/ : number of all posts</li>
-				<li>/posts/&lt;post-id&gt;/ : details about a specific post</li>
-				<li>/posts/by/?type=&lt;post-type&gt;&amp;start_date=&lt;date&gt;&amp;end_date=&lt;date&gt; : number of posts by each user, of the given type, within the given time period, sorted by number of posts (decreasing order)</li>
-				<li>/posts/by/&lt;user-id&gt;/?type=&lt;post-type&gt;&amp;start_date=&lt;date&gt;&amp;end_date=&lt;date&gt; : number of posts by the given user, of the given type, within the given time period, sorted by time</li>
-				<li>/posts/by/&lt;user-id&gt;/new/?type=&lt;post-type&gt;&amp;start_date=&lt;date&gt;&amp;end_date=&lt;date&gt;&amp;period=&lt;number-of-days&gt; : count of new posts by the given user, of the given type, within the given time period, sorted by time, separated by the given period</li>
-				<li>/posts/by/&lt;user-id&gt;/total/?type=&lt;post-type&gt;&amp;start_date=&lt;date&gt;&amp;end_date=&lt;date&gt;&amp;period=&lt;number-of-days&gt; : count of total posts by the given user, of the given type, within the given time period, sorted by time, separated by the given period</li>
-				<li>/posts/by/&lt;user-id&gt;/list/?type=&lt;post-type&gt;&amp;start_date=&lt;date&gt;&amp;end_date=&lt;date&gt; : list of posts by the given user, of the given type, within the given time period, sorted by time</li>
+				<li>/ : root</li>
+				<h3><li>Groups: /groups/</li></h3>
+				<ul>
+					<li>/ : list</li>
+					<li>/&lt;group-id&gt;/ : details</li>
+
+					<h3><li>Group members: /&lt;group-id&gt;/members/</li></h3>
+					<ul>
+						<li>/ : group</li>
+						<li>/list/ (type) : list, newest first</li>
+						<li>/new/ (type, dates, period) : count, sorted by join_time</li>
+						<li>/new/list/ (type, dates) : list, sorted by join_time</li>
+						<li>/total/ (type, dates, period) : count, sorted by join_time</li>
+						<li>/total/list/ (type, dates) : list, sorted by join_time</li>
+						<li>/left/ (type, dates, period) : count, sorted by leave_time</li>
+						<li>/left/list/ (type, dates) : list, sorted by leave_time</li>
+					</ul>
+
+					<h3><li>Group posts: /&lt;group-id&gt;/posts/</li></h3>
+					<ul>
+						<li>/ : group</li>
+						<li>/new/ (type, dates, period) : count, sorted by time</li>
+						<li>/total/ (type, dates, period) : count, sorted by time</li>
+						<li>/list/ (type, dates) : list, sorted by time</li>
+
+						<h4><li>Posts by: /by/</li></h4>
+						<ul>
+							<li>/ (type) : grouped by user-id, sorted by number of posts descending</li>
+							<li>/&lt;user-id&gt;/ : group</li>
+							<li>/&lt;user-id&gt;/new/ (type, dates, period) : count, sorted by time</li>
+							<li>/&lt;user-id&gt;/total/ (type, dates, period) : count, sorted by time</li>
+							<li>/&lt;user-id&gt;/list/ (type, dates) : list, sorted by time</li>
+							<li>/&lt;member-type&gt;/ : group</li>
+							<li>/&lt;member-type&gt;/new/ (type, dates, period) : count, sorted by time</li>
+							<li>/&lt;member-type&gt;/total/ (type, dates, period) : count, sorted by time</li>
+							<li>/&lt;member-type&gt;/list/ (type, dates) : list, sorted by time</li>
+						</ul>
+					</ul>
+				</ul>
+
+				<h3><li>Users: /users/</li></h3>
+				<ul>
+					<li>/ : number</li>
+					<li>/&lt;user-id&gt;/ : details</li>
+				</ul>
+
+				<h3><li>Posts: /posts/</li></h3>
+				<ul>
+					<li>/ : number</li>
+					<li>/&lt;post-id&gt;/ : details</li>
+					<li>/by/ (type) : grouped by user-id, sorted by number of posts descending</li>
+					<li>/by/&lt;user-id&gt;/ : group</li>
+					<li>/by/&lt;user-id&gt;/new/ (type, dates, period) : count, sorted by time</li>
+					<li>/by/&lt;user-id&gt;/total/ (type, dates, period) : count, sorted by time</li>
+					<li>/by/&lt;user-id&gt;/list/ (type, dates) : list, sorted by time</li>
+				</ul>
+			</ul>
+
+			<h3><li>Query types</li></h3>
+			<ul>
+				<strong>Note:</strong> Queries are always added in end of url end point as http://url/end/point/?query=value. Grouping together queries: ?query1=value1&query2=value2&query3=value3 (order does not matter).<br /><br />
+				<li>type: type=&lt;type&gt; : gives response about this type. if ommitted, all types are shown.</li>
+				<li>dates: start_date=&lt;date&gt;, end_date=&lt;date&gt; : gives response in this date range. if end_date is ommitted, it is taken as today. if start_date is ommitted it is taken as zero (problematic for total members as no members can be present before group was created). if end point has period type also and start_date is ommitted, it is taken as date of first valid entry (no results are returned if no valid results found).</li>
+				<li>period: period=&lt;number-of-days&gt; : gives response in this period. if ommitted, taken as 1 day.</li>
+			</ul>
+
+			<h3><li>Output types</li></h3>
+			<ul>
+				<li>details: node</li>
+				<li>list: list of nodes</li>
+				<li>group: {&lt;type&gt;: number, "total": total number}</li>
+				<li>number: {"total": number}</li>
+				<li>count: {"date": start date (end date is start date + period days), "count": number}</li>
 			</ul>
 
 			<h3><li>Nodes</li></h3>
@@ -62,27 +97,29 @@
 				<li>Member: {"id": user id, "name": user name, "join_time": time of joining group}</li>
 				<li>User: {"id": user id, "name": user name, "is_page": is user a person or page, "join_time": facebook joining time, "friends": number of friends, "groups": number of groups, "lives": where the user lives, "works": where the user works (or page description if user is a page), "study": where the user studies}</li>
 				<li>Post: {"id": post id, "group": group id, "user": user id, "time": time posted, "type": post type, "text": post text, "likes": likes, "shares": shares}</li>
-				<li>Count: {"date": start date (end date is start date + period days), "count": number}</li>
 			</ul>
 
-			<h3><li>Acceptable values for member-type</li></h3>
+			<h3><li>Acceptable values for type</li></h3>
 			<ul>
-				<li>creator</li>
-				<li>admin</li>
-				<li>moderator</li>
-				<li>banned</li>
-				<li><em>none</em> (all members)</li>
-			</ul>
+				<h4><li>Member</li></h4>
+				<ul>
+					<li>creator</li>
+					<li>admin</li>
+					<li>moderator</li>
+					<li>banned</li>
+					<li><em>none</em> (all members)</li>
+				</ul>
 
-			<h3><li>Acceptable values for post-type</li></h3>
-			<ul>
-				<li>poll</li>
-				<li>first</li>
-				<li>link</li>
-				<li>share</li>
-				<li>with</li>
-				<li>post (rest)</li>
-				<li><em>none</em> (all posts)</li>
+				<h4><li>Post</li></h4>
+				<ul>
+					<li>poll</li>
+					<li>first</li>
+					<li>link</li>
+					<li>share</li>
+					<li>with</li>
+					<li>post (rest)</li>
+					<li><em>none</em> (all posts)</li>
+				</ul>
 			</ul>
 		</ul>
 	</body>
