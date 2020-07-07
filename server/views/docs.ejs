@@ -76,9 +76,10 @@
 
 			<h3><li>Query types</li></h3>
 			<ul>
-				<strong>Note:</strong> Queries are always added in end of url end point as http://url/end/point/?query=value. Grouping together queries: ?query1=value1&query2=value2&query3=value3 (order does not matter).<br /><br />
+				<strong>Note:</strong> Queries are always added in end of url end point as http://url/end/point/?query1=value1&query2=value2&query3=value3 (order does not matter).<br /><br />
 				<li>type: type=&lt;type&gt; : gives response about this type. if ommitted, all types are shown.</li>
-				<li>dates: start_date=&lt;date&gt;, end_date=&lt;date&gt; : gives response in this date range. if end_date is ommitted, it is taken as today. if start_date is ommitted it is taken as zero (problematic for total members as no members can be present before group was created). if end point has period type also and start_date is ommitted, it is taken as date of first valid entry (no results are returned if no valid results found).</li>
+				<li>dates: start_date=&lt;date&gt;, end_date=&lt;date&gt; : gives response in this date range. if end_date is ommitted, it is taken as today. if start_date is ommitted it is taken as zero (problematic for total members as no members can be present before group was created). if end point has period type also and start_date is ommitted, it is taken as date of first valid entry (no response are returned if no valid entries found).</li>
+				<br /><strong>Note:</strong> to always have a valid response, it is recommended to use start_date as created_on of the group instead of leaving it empty. This way, even empty response will be zero filled.<br /><br />
 				<li>period: period=&lt;number-of-days&gt; : gives response in this period. if ommitted, taken as 1 day.</li>
 			</ul>
 
