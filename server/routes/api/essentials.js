@@ -44,7 +44,8 @@ function periodify(results, key, dates, retain, period=null){
 				date.setDate(date.getDate() + period);
 				perioded_results.push({'date': new Date(date), 'count': retain ? count : 0});
 			}
-			current_date = result[key];
+			date.setDate(date.getDate() + period);
+			current_date = date;
 			count = retain ? count + 1 : 1;
 			setCount = true;
 		}else{
