@@ -38,7 +38,7 @@ def get_id(link):
 
 def get_user_id(tag):
     parent = get_parent(tag, lambda tag: tag.has_attr('href'))
-    return get_id(parent['href'])
+    return get_id(parent['href']) if parent else 0
 
 def get_num(string):
     return int(string.replace(',', ''))

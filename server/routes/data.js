@@ -217,7 +217,7 @@ router.post('/members/', upload.single('members_file'), (req, res) => {
 
 				connection.connect(() => {
 					const users = JSON.parse(data);
-					connection.queries = 1 + 6 * users.length;
+					connection.queries = 1 + 7 * users.length;
 					connection.execute("SELECT `user` FROM `member` WHERE `group` = ? AND `leave_time` IS NULL;", [group], res, (results) => {
 						var existing_users = results.map((result) => {return result.user});
 						users.forEach((user) => {
@@ -258,6 +258,8 @@ router.post('/members/', upload.single('members_file'), (req, res) => {
 													// special_member not found. inserting
 													if(user['type'] == "member"){
 														connection.execute(null, null, res);
+														connection.execute(null, null, res);
+														connection.execute(null, null, res);
 													}else{
 														sql = "INSERT INTO `special_member` (`member`, `join_time`, `member_type`) VALUES (?, convert(?, datetime), ?);";
 														values = [member_id, new Date(), user['type']];
@@ -291,6 +293,7 @@ router.post('/members/', upload.single('members_file'), (req, res) => {
 												}
 											});
 										}else{
+											connection.execute(null, null, res);
 											connection.execute(null, null, res);
 											connection.execute(null, null, res);
 											connection.execute(null, null, res);

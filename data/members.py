@@ -28,8 +28,9 @@ def extract_data(data):
             if is_empty(info):
                 continue
             if get_parent(info, "a"):
-                if not re.match("View [\d,]+\+? recent post", info) and info != "New member":
-                    user['type'] = info.lower()
+                user_type = info.lower()
+                if user_type in ['admin', 'moderator', 'creator']:
+                    user['type'] = user_type
                 continue
             if info.parent.has_attr("class") and 'timestampContent' in info.parent['class']:
                 user['join_time'] = get_time(info)

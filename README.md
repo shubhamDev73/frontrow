@@ -17,6 +17,9 @@ TO-DO
   - reacts?
   - who shared?
 
+- Members
+  - invited
+
 - Requests
   - store invited by?
   - store groups in common?
@@ -28,7 +31,7 @@ TO-DO
 
 - API
   - mergeParams
-  - active members
+  - active members: anyone who has commented even once in the community
   - timezone
   - only date in count response?
   - end date in count response?
@@ -37,3 +40,4 @@ TO-DO
   - member-type member?
   - likes, comments, shares graphs
   - comments analytics
+  - member details: id, name, joined on, number of posts, number of comments
