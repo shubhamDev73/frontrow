@@ -40,4 +40,4 @@ TO-DO
   - member-type member?
   - likes, comments, shares graphs
   - comments analytics
-  - member details: id, name, joined on, number of posts, number of comments
+  - member details: number of posts, number of comments
