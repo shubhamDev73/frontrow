@@ -7,6 +7,15 @@ function getDates(req){
 	if(req.query.start_date)
 		dates[0] = new Date(req.query.start_date);
 
+	dates[0].setUTCHours(0);
+	dates[0].setUTCMinutes(0);
+	dates[0].setUTCSeconds(0);
+	dates[0].setUTCMilliseconds(0);
+	dates[1].setUTCHours(0);
+	dates[1].setUTCMinutes(0);
+	dates[1].setUTCSeconds(0);
+	dates[1].setUTCMilliseconds(0);
+
 	return dates;
 }
 
