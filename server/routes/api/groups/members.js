@@ -87,6 +87,23 @@ router.get('/total/list/', (req, res) => {
 	});
 });
 
+router.get('/active/', (req, res) => {
+	const dates = essentials.getDates(req);
+	const connection = new Connection();
+	connection.connect(() => {
+		connection.queries = 1;
+		if(req.query.type){
+			connection.execute("SELECT c.`time`, c.`user` FROM `comment` c, `member` m WHERE c.`user` = m.`user` AND m.`group` = ? AND m.`member_type` = ? ORDER BY c.`time`;", [group.id, req.query.type], res, (results) => {
+				connection.response = essentials.periodify(results, 'time', dates, req.query.period, false, true);
+			});
+		}else{
+			connection.execute("SELECT c.`time`, c.`user` FROM `comment` c, `post` p WHERE c.`post` = p.`id` AND p.`group` = ? ORDER BY c.`time`;", [group.id], res, (results) => {
+				connection.response = essentials.periodify(results, 'time', dates, req.query.period, false, true);
+			});
+		}
+	});
+});
+
 router.get('/left/', (req, res) => {
 	const dates = essentials.getDates(req);
 	const connection = new Connection();
