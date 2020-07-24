@@ -26,11 +26,11 @@ router.get('/new/', (req, res) => {
 		connection.queries = 1;
 		if(req.query.type){
 			connection.execute("SELECT `time` FROM `post` WHERE `group` = ? AND `time` BETWEEN ? AND ? AND `type` = ? ORDER BY `time`;", [group.id, dates[0], dates[1], req.query.type], res, (results) => {
-				connection.response = essentials.periodify(results, 'time', dates, false, req.query.period);
+				connection.response = essentials.periodify(results, 'time', dates, req.query.period);
 			});
 		}else{
 			connection.execute("SELECT `time` FROM `post` WHERE `group` = ? AND `time` BETWEEN ? AND ? ORDER BY `time`;", [group.id, dates[0], dates[1]], res, (results) => {
-				connection.response = essentials.periodify(results, 'time', dates, false, req.query.period);
+				connection.response = essentials.periodify(results, 'time', dates, req.query.period);
 			});
 		}
 	});
@@ -43,11 +43,11 @@ router.get('/total/', (req, res) => {
 		connection.queries = 1;
 		if(req.query.type){
 			connection.execute("SELECT `time` FROM `post` WHERE `group` = ? AND `time` BETWEEN ? AND ? AND `type` = ? ORDER BY `time`;", [group.id, dates[0], dates[1], req.query.type], res, (results) => {
-				connection.response = essentials.periodify(results, 'time', dates, true, req.query.period);
+				connection.response = essentials.periodify(results, 'time', dates, req.query.period, true);
 			});
 		}else{
 			connection.execute("SELECT `time` FROM `post` WHERE `group` = ? AND `time` BETWEEN ? AND ? ORDER BY `time`;", [group.id, dates[0], dates[1]], res, (results) => {
-				connection.response = essentials.periodify(results, 'time', dates, true, req.query.period);
+				connection.response = essentials.periodify(results, 'time', dates, req.query.period, true);
 			});
 		}
 	});
@@ -103,11 +103,11 @@ router.get('/by/:user(\\d+)/new/', (req, res) => {
 		connection.queries = 1;
 		if(req.query.type){
 			connection.execute("SELECT `time` FROM `post` WHERE `group` = ? AND `user` = ? AND `time` BETWEEN ? AND ? AND `type` = ? ORDER BY `time`;", [group.id, req.params.user, dates[0], dates[1], req.query.type], res, (results) => {
-				connection.response = essentials.periodify(results, 'time', dates, false, req.query.period);
+				connection.response = essentials.periodify(results, 'time', dates, req.query.period);
 			});
 		}else{
 			connection.execute("SELECT `time` FROM `post` WHERE `group` = ? AND `user` = ? AND `time` BETWEEN ? AND ? ORDER BY `time`;", [group.id, req.params.user, dates[0], dates[1]], res, (results) => {
-				connection.response = essentials.periodify(results, 'time', dates, false, req.query.period);
+				connection.response = essentials.periodify(results, 'time', dates, req.query.period);
 			});
 		}
 	});
@@ -120,11 +120,11 @@ router.get('/by/:user(\\d+)/total/', (req, res) => {
 		connection.queries = 1;
 		if(req.query.type){
 			connection.execute("SELECT `time` FROM `post` WHERE `group` = ? AND `user` = ? AND `time` BETWEEN ? AND ? AND `type` = ? ORDER BY `time`;", [group.id, req.params.user, dates[0], dates[1], req.query.type], res, (results) => {
-				connection.response = essentials.periodify(results, 'time', dates, true, req.query.period);
+				connection.response = essentials.periodify(results, 'time', dates, req.query.period, true);
 			});
 		}else{
 			connection.execute("SELECT `time` FROM `post` WHERE `group` = ? AND `user` = ? AND `time` BETWEEN ? AND ? ORDER BY `time`;", [group.id, req.params.user, dates[0], dates[1]], res, (results) => {
-				connection.response = essentials.periodify(results, 'time', dates, true, req.query.period);
+				connection.response = essentials.periodify(results, 'time', dates, req.query.period, true);
 			});
 		}
 	});
@@ -164,11 +164,11 @@ router.get('/by/:type(\\w+)/new/', (req, res) => {
 		connection.queries = 1;
 		if(req.query.type){
 			connection.execute("SELECT `time` FROM `post` p, `member` m WHERE p.`user` = m.`user` AND p.`group` = m.`group` AND p.`group` = ? AND m.`leave_time` IS NULL AND m.`member_type` = ? AND `time` BETWEEN ? AND ? AND p.`type` = ? ORDER BY `time`;", [group.id, req.params.type, dates[0], dates[1], req.query.type], res, (results) => {
-				connection.response = essentials.periodify(results, 'time', dates, false, req.query.period);
+				connection.response = essentials.periodify(results, 'time', dates, req.query.period);
 			});
 		}else{
 			connection.execute("SELECT `time` FROM `post` p, `member` m WHERE p.`user` = m.`user` AND p.`group` = m.`group` AND p.`group` = ? AND m.`leave_time` IS NULL AND m.`member_type` = ? AND `time` BETWEEN ? AND ? ORDER BY `time`;", [group.id, req.params.type, dates[0], dates[1]], res, (results) => {
-				connection.response = essentials.periodify(results, 'time', dates, false, req.query.period);
+				connection.response = essentials.periodify(results, 'time', dates, req.query.period);
 			});
 		}
 	});
@@ -181,11 +181,11 @@ router.get('/by/:type(\\w+)/total/', (req, res) => {
 		connection.queries = 1;
 		if(req.query.type){
 			connection.execute("SELECT `time` FROM `post` p, `member` m WHERE p.`user` = m.`user` AND p.`group` = m.`group` AND p.`group` = ? AND m.`leave_time` IS NULL AND m.`member_type` = ? AND `time` BETWEEN ? AND ? AND p.`type` = ? ORDER BY `time`;", [group.id, req.params.type, dates[0], dates[1], req.query.type], res, (results) => {
-				connection.response = essentials.periodify(results, 'time', dates, true, req.query.period);
+				connection.response = essentials.periodify(results, 'time', dates, req.query.period, true);
 			});
 		}else{
 			connection.execute("SELECT `time` FROM `post` p, `member` m WHERE p.`user` = m.`user` AND p.`group` = m.`group` AND p.`group` = ? AND m.`leave_time` IS NULL AND m.`member_type` = ? AND `time` BETWEEN ? AND ? ORDER BY `time`;", [group.id, req.params.type, dates[0], dates[1]], res, (results) => {
-				connection.response = essentials.periodify(results, 'time', dates, true, req.query.period);
+				connection.response = essentials.periodify(results, 'time', dates, req.query.period, true);
 			});
 		}
 	});

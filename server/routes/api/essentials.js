@@ -19,11 +19,14 @@ function getDates(req){
 	return dates;
 }
 
-function periodify(results, key, dates, retain, period=null){
+function periodify(results, key, dates, period, retain, unique_users){
 	var perioded_results = [];
 
-	if(period == null) period = 1; // default period
+	if(period == undefined) period = 1; // default period
 	if(typeof period == 'string') period = Number(period);
+
+	if(retain == undefined) retain = false;
+	if(unique_users == undefined) unique_users = false;
 
 	if(results.length == 0){
 		if(dates[0].valueOf() == 0) return results;
@@ -41,6 +44,8 @@ function periodify(results, key, dates, retain, period=null){
 	var current_date = dates[0].valueOf() == 0 ? results[0][key] : dates[0]; // default start date
 	var count = 0;
 	var setCount = dates[0].valueOf() == 0;
+	var users = [];
+
 	// counting for each result
 	results.forEach((result) => {
 		const diff = (result[key] - current_date) / (1000 * 60 * 60 * 24);
@@ -49,17 +54,20 @@ function periodify(results, key, dates, retain, period=null){
 
 			// adding missing intervals
 			var date = new Date(current_date);
-			while((result[key] - date) / (1000 * 60 * 60 * 24) > period){
-				date.setDate(date.getDate() + period);
-				perioded_results.push({'date': new Date(date), 'count': retain ? count : 0});
-			}
 			date.setDate(date.getDate() + period);
+			while((result[key] - date) / (1000 * 60 * 60 * 24) > period){
+				perioded_results.push({'date': new Date(date), 'count': retain ? count : 0});
+				date.setDate(date.getDate() + period);
+			}
 			current_date = date;
 			count = retain ? count + 1 : 1;
 			setCount = true;
+			users = [result['user']];
 		}else{
-			if(setCount || retain)
+			if((setCount || retain) && (!unique_users || users.indexOf(result['user']) < 0)){
 				count++;
+				users.push(result['user']);
+			}
 		}
 	});
 
