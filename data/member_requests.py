@@ -123,7 +123,7 @@ if __name__ == '__main__':
 
     users_to_extract = int(sys.argv[3]) if len(sys.argv) > 3 else 0
 
-    with open(sys.argv[1],  encoding="utf-8") as f:
+    with open(sys.argv[1],  encoding="utf-16") as f:
         soup = BeautifulSoup(f, 'html.parser')
 
     elements = next(soup.find(id="member_requests_pagelet").find(lambda tag: tag.has_attr("class") and '_7gi8' not in tag['class'] and '_4-u2' in tag['class'] and '_4-u8' in tag['class']).children).children
@@ -136,5 +136,5 @@ if __name__ == '__main__':
             break
         users.append(extract_data(request))
 
-    with open(sys.argv[2], "w", encoding="utf-8") if len(sys.argv) > 2 else sys.stdout as f:
+    with open(sys.argv[2], "w", encoding="utf-16") if len(sys.argv) > 2 else sys.stdout as f:
         json.dump(users, f, indent=4)

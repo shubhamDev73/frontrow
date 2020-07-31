@@ -160,7 +160,7 @@ if __name__ == "__main__":
 
     posts_to_extract = int(sys.argv[3]) if len(sys.argv) > 3 else 0
 
-    with open(sys.argv[1], encoding="utf-8") as f:
+    with open(sys.argv[1], encoding="utf-16") as f:
         soup = BeautifulSoup(f, 'html.parser')
 
     news_feed = soup.find(lambda tag: tag.has_attr("aria-label") and tag['aria-label'] == "News Feed")
@@ -178,5 +178,5 @@ if __name__ == "__main__":
         if post.has_attr("role") and post['role'] == "article":
             posts.append(extract_data(post))
 
-    with open(sys.argv[2], "w", encoding="utf-8") if len(sys.argv) > 2 else sys.stdout as f:
+    with open(sys.argv[2], "w", encoding="utf-16") if len(sys.argv) > 2 else sys.stdout as f:
         json.dump(posts, f, indent=4)
