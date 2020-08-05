@@ -1,5 +1,7 @@
 const express = require('express');
 
+const cors = require('cors');
+
 process.env.TZ = 'Asia/Kolkata';
 const log = console.log;
 console.log = (string) => {
@@ -11,9 +13,9 @@ const app = express();
 app.set('views', './views');
 app.set('view engine', 'ejs');
 
+app.use(cors());
 app.use((req, res, next) => {
 	console.log(req.method + " " + req.url + " -> " + req.ip);
-	res.setHeader("Access-Control-Allow-Origin", "*");
 	next();
 });
 
