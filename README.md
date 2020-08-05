@@ -18,7 +18,9 @@ TO-DO
   - who shared?
 
 - Members
-  - invited
+  - store invited by?
+  - store added by?
+  - with no href?
 
 - Requests
   - store invited by?
@@ -27,17 +29,16 @@ TO-DO
 
 - All
   - check class
-  - store ids in file?
 
 - API
   - mergeParams
-  - active members: anyone who has commented even once in the community
+  - active members: posted
   - timezone
   - only date in count response?
   - end date in count response?
-  - data upload as API
   - multiple data uploads
   - member-type member?
   - likes, comments, shares graphs
   - comments analytics
   - member details: number of posts, number of comments
+  - group details: number of posts

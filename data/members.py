@@ -40,15 +40,15 @@ def extract_data(data):
                     user['friends'] = get_num(info.split(' ')[0])
                     continue
                 if is_empty(info[:3]):
-                    print(info[3:].capitalize())
+                    # print(info[3:].capitalize())
                     continue
                 if info[:9] == "Added by " or info[:17] == "Created group on ":
                     infos = info.split(' on ')
                     user['join_time'] = get_date(infos[1])
                     if infos[0] == "Created group":
                         user['type'] = "creator"
-                    else:
-                        print("Added by: %s" % infos[0].replace("Added by ", ''))
+                    # else:
+                    #     print("Added by: %s" % infos[0].replace("Added by ", ''))
                     continue
                 page_symbol = next(info.parent.parent.children)
                 user['is_page'] = page_symbol != info and page_symbol.has_attr("class") and '_gph' in page_symbol['class']
@@ -63,11 +63,11 @@ if __name__ == '__main__':
 
     users_to_extract = int(sys.argv[3]) if len(sys.argv) > 3 else 0
 
-    with open(sys.argv[1], encoding="utf-16") as f:
+    with open(sys.argv[1], encoding="utf-8") as f:
         soup = BeautifulSoup(f, 'html.parser')
 
     total_members = get_num(next(soup.find(id="groupsMemberBrowser").children).text.replace("Members", ''))
-    print("Total members: %d" % total_members)
+    # print("Total members: %d" % total_members)
 
     members_container = soup.find(id="groupsMemberBrowserContent")
 
@@ -76,9 +76,7 @@ if __name__ == '__main__':
 
         member_type = members['id'].replace("groupsMemberSection_", '')
 
-        if member_type != "all_members":
-            print("%s: %d" % (member_type, get_num(list(members.stripped_strings)[1])))
-        else:
+        if member_type == "all_members":
             all_elements = members.find_all(class_="fbProfileBrowserList")
             all_members = []
             for element in all_elements:
@@ -87,7 +85,9 @@ if __name__ == '__main__':
             for member in all_members:
                 if users_to_extract and len(users) >= users_to_extract:
                     break
-                users.append(extract_data(member))
+                extracted_user = extract_data(member)
+                if extracted_user['id'] != 0:
+                    users.append(extracted_user)
 
-    with open(sys.argv[2], "w", encoding="utf-16") if len(sys.argv) > 2 else sys.stdout as f:
+    with open(sys.argv[2], "w", encoding="utf-8") if len(sys.argv) > 2 else sys.stdout as f:
         json.dump(users, f, indent=4)

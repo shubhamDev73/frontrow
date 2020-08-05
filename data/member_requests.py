@@ -38,9 +38,9 @@ def extract_data(request):
         if index == 0:
             user['name'] = info
             user['id'] = get_id("https://www.facebook.com/%s" % info.parent['href'])
-        elif index == 1:
-            if info != "Requested ":
-                print("Invited by: %s" % info[11:])
+        # elif index == 1:
+        #     if info != "Requested ":
+        #         print("Invited by: %s" % info[11:])
         elif index == 2:
             user['member']['join_time'] = get_time(info)
         elif index == 3:
@@ -48,11 +48,11 @@ def extract_data(request):
                 group_index += 1
                 continue
             if re.match("[\d,]+ groups? in common", info):
-                print("Groups in common: %d" % get_num(info.split(' ')[0]))
+                # print("Groups in common: %d" % get_num(info.split(' ')[0]))
                 group_index += 1
                 continue
             if re.match("[\d,]+ friends? in group", info):
-                print("Friends in group: %d" % get_num(info.split(' ')[0]))
+                # print("Friends in group: %d" % get_num(info.split(' ')[0]))
                 group_index += 1
                 continue
             if re.match("[\d,]+ friends", info):
@@ -112,8 +112,10 @@ def extract_data(request):
             is_answer = get_answer(user, info, is_answer)
             group_index += 1
             continue
+
     if not work_has_question and work != '':
         user['work' if img_class == 'sx_6dce7b' else 'study'] = work if study == '' else study
+
     return user
 
 if __name__ == '__main__':
@@ -123,12 +125,12 @@ if __name__ == '__main__':
 
     users_to_extract = int(sys.argv[3]) if len(sys.argv) > 3 else 0
 
-    with open(sys.argv[1],  encoding="utf-16") as f:
+    with open(sys.argv[1],  encoding="utf-8") as f:
         soup = BeautifulSoup(f, 'html.parser')
 
     elements = next(soup.find(id="member_requests_pagelet").find(lambda tag: tag.has_attr("class") and '_7gi8' not in tag['class'] and '_4-u2' in tag['class'] and '_4-u8' in tag['class']).children).children
 
-    print("Total requests: %d" % get_num(list(next(elements).stripped_strings)[0].split(' ')[0]))
+    # print("Total requests: %d" % get_num(list(next(elements).stripped_strings)[0].split(' ')[0]))
 
     users = []
     for request in next(elements).find("ul").children:
@@ -136,5 +138,5 @@ if __name__ == '__main__':
             break
         users.append(extract_data(request))
 
-    with open(sys.argv[2], "w", encoding="utf-16") if len(sys.argv) > 2 else sys.stdout as f:
+    with open(sys.argv[2], "w", encoding="utf-8") if len(sys.argv) > 2 else sys.stdout as f:
         json.dump(users, f, indent=4)
