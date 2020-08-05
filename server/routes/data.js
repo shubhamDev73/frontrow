@@ -39,7 +39,7 @@ router.post('/posts/', upload.single('posts_file'), (req, res) => {
 
 	var errors = [];
 
-	const script = spawn('python', [python + 'posts.py', destination + 'posts.txt', destination + 'posts.json', number]);
+	const script = spawn('python', [python + 'posts.py', destination + 'posts.txt', destination + 'posts.json', Number.isNaN(number) ? 0 : number]);
 	console.log("Executing 'posts.py'.......");
 
 	script.stdout.on('data', (data) => {
@@ -184,7 +184,7 @@ router.post('/members/', upload.single('members_file'), (req, res) => {
 
 	var errors = [];
 
-	const script = spawn('python', [python + 'members.py', destination + 'members.txt', destination + 'members.json', number]);
+	const script = spawn('python', [python + 'members.py', destination + 'members.txt', destination + 'members.json', Number.isNaN(number) ? 0 : number]);
 	console.log("Executing 'members.py'.......");
 
 	script.stdout.on('data', (data) => {
@@ -234,17 +234,18 @@ router.post('/members/', upload.single('members_file'), (req, res) => {
 									if(results.length == 0){
 										// user not a member. inserting
 										sql = "INSERT INTO `member` (`user`, `group`, `join_time`, `member_type`)\
-										VALUES (?, ?, convert(?, datetime), ?)";
+										VALUES (?, ?, convert(?, datetime), ?);";
 										values = [user['id'], group, user['join_time'], user['type']];
 										connection.execute(sql, values, res, (results) => {
 											if(user['type'] == "member"){
 												connection.execute(null, null, res);
 											}else{
 												sql = "INSERT INTO `special_member` (`member`, `join_time`, `member_type`)\
-												VALUES (?, convert(?, datetime), ?)";
+												VALUES (?, convert(?, datetime), ?);";
 												values = [results.insertId, user['join_time'], user['type']];
 												connection.execute(sql, values, res);
 											}
+											connection.execute(null, null, res);
 											connection.execute(null, null, res);
 										});
 									}else{
@@ -307,12 +308,12 @@ router.post('/members/', upload.single('members_file'), (req, res) => {
 								if(results.length == 0){
 									// user not found. inserting
 									var sql = "INSERT INTO `user` (`id`, `name`, `is_page`, `join_time`, `friends`, `groups`, `lives`, `work`, `study`)\
-									VALUES (?, ?, ?, convert(?, datetime), ?, ?, ?, ?, ?)";
+									VALUES (?, ?, ?, convert(?, datetime), ?, ?, ?, ?, ?);";
 									var values = [user['id'], user['name'], user['is_page'], user['join_time'], user['friends'], user['groups'], user['lives'], user['work'], user['study']];
 									connection.execute(sql, values, res, member);
 								}else{
 									// user found. updating
-									var sql = "UPDATE `user` SET `name` = ?, `is_page` = ?, `join_time` = ?, `friends` = ?, `groups` = ?, `lives` = ?, `work` = ?, `study` = ? WHERE `id` = ?";
+									var sql = "UPDATE `user` SET `name` = ?, `is_page` = ?, `join_time` = ?, `friends` = ?, `groups` = ?, `lives` = ?, `work` = ?, `study` = ? WHERE `id` = ?;";
 									var values = [user['name'], user['is_page'], user['join_time'], user['friends'], user['groups'], user['lives'], user['work'], user['study'], user['id']];
 									connection.execute(sql, values, res, member);
 								}
@@ -351,7 +352,7 @@ router.post('/requests/', upload.single('requests_file'), (req, res) => {
 
 	var errors = [];
 
-	const script = spawn('python', [python + 'member_requests.py', destination + 'requests.txt', destination + 'requests.json', number]);
+	const script = spawn('python', [python + 'member_requests.py', destination + 'requests.txt', destination + 'requests.json', Number.isNaN(number) ? 0 : number]);
 	console.log("Executing 'member_requests.py'.......");
 
 	script.stdout.on('data', (data) => {
@@ -429,7 +430,7 @@ router.post('/requests/', upload.single('requests_file'), (req, res) => {
 								if(results.length == 0){
 									// user not a member. inserting
 									sql = "INSERT INTO `member` (`user`, `group`, `join_time`)\
-									VALUES (?, ?, convert(?, datetime))";
+									VALUES (?, ?, convert(?, datetime));";
 									values = [user['id'], group, user['member']['join_time']];
 									connection.execute(sql, values, res, answer);
 									connection.execute(null, null, res);
@@ -446,12 +447,12 @@ router.post('/requests/', upload.single('requests_file'), (req, res) => {
 							if(results.length == 0){
 								// user not found. inserting
 								var sql = "INSERT INTO `user` (`id`, `name`, `is_page`, `join_time`, `friends`, `groups`, `lives`, `work`, `study`)\
-								VALUES (?, ?, ?, convert(?, datetime), ?, ?, ?, ?, ?)";
+								VALUES (?, ?, ?, convert(?, datetime), ?, ?, ?, ?, ?);";
 								var values = [user['id'], user['name'], user['is_page'], user['join_time'], user['friends'], user['groups'], user['lives'], user['work'], user['study']];
 								connection.execute(sql, values, res, member);
 							}else{
 								// user found. updating
-								var sql = "UPDATE `user` SET `name` = ?, `is_page` = ?, `join_time` = ?, `friends` = ?, `groups` = ?, `lives` = ?, `work` = ?, `study` = ? WHERE `id` = ?";
+								var sql = "UPDATE `user` SET `name` = ?, `is_page` = ?, `join_time` = ?, `friends` = ?, `groups` = ?, `lives` = ?, `work` = ?, `study` = ? WHERE `id` = ?;";
 								var values = [user['name'], user['is_page'], user['join_time'], user['friends'], user['groups'], user['lives'], user['work'], user['study'], user['id']];
 								connection.execute(sql, values, res, member);
 							}
