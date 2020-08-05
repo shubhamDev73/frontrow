@@ -1,5 +1,5 @@
 Table user {
-  id bigint [pk, note: 'facebook id']
+  id varchar(40) [pk, note: 'facebook id']
   name varchar(50) [not null]
   is_page boolean [default: false]
   join_time datetime [not null, note: 'facebook joining time']
@@ -18,7 +18,7 @@ Table group {
 
 Table member {
   id int [pk, increment]
-  user bigint [ref: > user.id]
+  user varchar(40) [ref: > user.id]
   group bigint [ref: > group.id]
   join_time datetime [not null]
   leave_time datetime [default: null]
@@ -51,7 +51,7 @@ Table special_member {
 Table post {
   id bigint [pk, note: 'facebook id']
   group bigint [ref: > group.id]
-  user bigint [ref: > user.id]
+  user varchar(40) [ref: > user.id]
   time datetime [not null]
   type post_type [default: 'post']
   text varchar(1000) [not null]
@@ -72,7 +72,7 @@ Table comment {
   id bigint [pk, note: 'facebook id']
   post bigint [ref: > post.id]
   comment bigint [null, ref: > comment.id, note: 'if reply, the comment which it is reply of']
-  user bigint [ref: > user.id]
+  user varchar(40) [ref: > user.id]
   time datetime [not null]
   text varchar(1000) [not null]
   likes int [not null]

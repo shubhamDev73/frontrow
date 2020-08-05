@@ -1,5 +1,3 @@
-ids = {}
-
 def is_empty(tag):
     tag = tag.strip()
     return tag == '' or tag == '·' or tag == '•'
@@ -11,30 +9,16 @@ def get_id(link):
     links = link.split('?')
     link = links[0]
 
-    try:
-        ids[link] = int(link.split('/')[-2].split('-')[-1])
-        return ids[link]
-    except:
-        pass
-
-    try:
-        ids[link] = int(link.split('/')[-1])
-        return ids[link]
-    except:
-        pass
-
     if links[1][:3] == "id=":
-        return int(links[1].split('&')[0][3:])
-
-    if link in ids:
-        return ids[link]
+        return links[1].split('&')[0][3:] #  # https://www.facebook.com/profile.php?id=id
 
     try:
-        page = requests.post("https://lookup-id.com", data={"check": "Lookup", "fburl": link})
-        ids[link] = int(BeautifulSoup(page.content, 'html.parser').find(id='code').text)
-    except AttributeError:
-        raise ConnectionError("Error extracting id from link. Try again")
-    return ids[link]
+        return str(int(link.split('/')[-2].split('-')[-1])) # https://www.facebook.com/name-id/
+    except:
+        pass
+
+    links = link.split('/')
+    return links[-2] if links[-1] == '' else links[-1] # https://www.facebook.com/name/
 
 def get_user_id(tag):
     parent = get_parent(tag, lambda tag: tag.has_attr('href'))

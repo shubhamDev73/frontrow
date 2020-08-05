@@ -1,5 +1,5 @@
 CREATE TABLE `user` (
-  `id` bigint PRIMARY KEY COMMENT 'facebook id',
+  `id` varchar(40) PRIMARY KEY COMMENT 'facebook id',
   `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `is_page` boolean DEFAULT false,
   `join_time` datetime NOT NULL COMMENT 'facebook joining time',
@@ -18,7 +18,7 @@ CREATE TABLE `group` (
 
 CREATE TABLE `member` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
-  `user` bigint,
+  `user` varchar(40),
   `group` bigint,
   `join_time` datetime NOT NULL,
   `leave_time` datetime DEFAULT null,
@@ -43,7 +43,7 @@ CREATE TABLE `special_member` (
 CREATE TABLE `post` (
   `id` bigint PRIMARY KEY COMMENT 'facebook id',
   `group` bigint,
-  `user` bigint,
+  `user` varchar(40),
   `time` datetime NOT NULL,
   `type` ENUM ('post', 'poll', 'first', 'link', 'share', 'with') DEFAULT "post",
   `text` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -55,7 +55,7 @@ CREATE TABLE `comment` (
   `id` bigint PRIMARY KEY COMMENT 'facebook id',
   `post` bigint,
   `comment` bigint DEFAULT null COMMENT 'if reply, the comment which it is reply of',
-  `user` bigint,
+  `user` varchar(40),
   `time` datetime NOT NULL,
   `text` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `likes` int NOT NULL
