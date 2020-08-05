@@ -9,7 +9,7 @@ def get_id(link):
     links = link.split('?')
     link = links[0]
 
-    if links[1][:3] == "id=":
+    if len(links) > 1 and links[1][:3] == "id=":
         return links[1].split('&')[0][3:] #  # https://www.facebook.com/profile.php?id=id
 
     try:
