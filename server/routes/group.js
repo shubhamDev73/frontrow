@@ -28,7 +28,7 @@ router.post('/', (req, res) => {
 	console.log("Executing 'group.py'.......");
 
 	script.stdout.on('data', (data) => {
-		id = Number(data.toString().split('\r\n')[0]);
+		id = Number(data.toString().replace('\r', '').replace('\n', ''));
 	});
 
 	script.stderr.on('data', (data) => {

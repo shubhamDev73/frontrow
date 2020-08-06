@@ -3,9 +3,6 @@ def is_empty(tag):
     return tag == '' or tag == '·' or tag == '•'
 
 def get_id(link):
-    import requests
-    from bs4 import BeautifulSoup
-
     links = link.split('?')
     link = links[0]
 
@@ -19,6 +16,16 @@ def get_id(link):
 
     links = link.split('/')
     return links[-2] if links[-1] == '' else links[-1] # https://www.facebook.com/name/
+
+def get_facebook_id(link):
+    import requests
+    from bs4 import BeautifulSoup
+
+    try:
+        page = requests.post("https://lookup-id.com", data={"check": "Lookup", "fburl": link})
+        return int(BeautifulSoup(page.content, 'html.parser').find(id='code').text)
+    except AttributeError:
+        raise ConnectionError("Error extracting id from link. Try again")
 
 def get_user_id(tag):
     parent = get_parent(tag, lambda tag: tag.has_attr('href'))
