@@ -44,7 +44,10 @@ def extract_data(data):
                     continue
                 if info[:9] == "Added by " or info[:17] == "Created group on ":
                     infos = info.split(' on ')
-                    user['join_time'] = get_date(infos[1])
+                    if len(infos) > 1:
+                        user['join_time'] = get_date(infos[1])
+                    else:
+                        return None # Added by .... yesterday
                     if infos[0] == "Created group":
                         user['type'] = "creator"
                     # else:
@@ -86,7 +89,7 @@ if __name__ == '__main__':
                 if users_to_extract and len(users) >= users_to_extract:
                     break
                 extracted_user = extract_data(member)
-                if extracted_user['id'] != 0:
+                if extracted_user and extracted_user['id'] != 0:
                     users.append(extracted_user)
 
     with open(sys.argv[2], "w", encoding="utf-8") if len(sys.argv) > 2 else sys.stdout as f:

@@ -21,6 +21,7 @@ TO-DO
   - store invited by?
   - store added by?
   - with no href?
+  - Added by .... yesterday?
 
 - Requests
   - store invited by?
