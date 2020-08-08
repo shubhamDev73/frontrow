@@ -61,7 +61,7 @@ def extract_data(element):
             if post['time'] != '':
                 continue
             if get_parent(info, lambda info: info.has_attr("data-utime")) is None:
-                post_index -= 1
+                post_index += 1
                 continue
             post['id'] = post_id(info)
             post['time'] = get_time(info)
