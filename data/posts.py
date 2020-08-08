@@ -8,7 +8,7 @@ def extract_data(element):
     import re
 
     post = {
-        "user": 0,
+        "user": "",
         "type": "post",
         "id": 0,
         "time": "",
@@ -18,11 +18,13 @@ def extract_data(element):
         "comments": [],
         "error": "",
     }
+    comment = None
 
     liked = False
     post_type = ''
     post_index = 0
     comment_index = len(list(element.strings))
+    current_comment = None
     for index, info in enumerate(element.strings):
         index -= post_index
         if index == 0:
@@ -57,6 +59,9 @@ def extract_data(element):
                 continue
         elif index == 4:
             if post['time'] != '':
+                continue
+            if get_parent(info, lambda info: info.has_attr("data-utime")) is None:
+                post_index -= 1
                 continue
             post['id'] = post_id(info)
             post['time'] = get_time(info)
@@ -105,7 +110,7 @@ def extract_data(element):
                 parent = get_parent(parent, lambda parent: parent.name == 'li' and len(list(parent.children)) == 2)
                 reply = current_parent == parent
                 if reply:
-                    if not current_comment:
+                    if not current_comment and comment:
                         current_comment = comment
                 else:
                     current_comment = None
@@ -125,6 +130,11 @@ def extract_data(element):
                         comment['text'] = "<sticker>"
                     if comment['text'][-8:] == "See more":
                         comment['error'] += "Error: See more present!!\n"
+                    if likes == "Hide or report this":
+                        last_index -= 1
+                        continue
+                    if likes == "Write a comment..." or re.match("Comment as ", likes):
+                        break
                     if likes == "Manage":
                         last_index -= 1
                     else:
