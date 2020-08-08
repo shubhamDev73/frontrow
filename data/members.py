@@ -1,8 +1,8 @@
+import re
+
 from essentials import is_empty, get_user_id, get_num, get_parent, get_time, get_date
 
 def extract_data(data):
-    import re
-
     user = {
         "id": 0,
         "name": "",

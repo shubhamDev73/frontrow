@@ -1,3 +1,5 @@
+import re
+
 from essentials import is_empty, get_id, get_user_id, get_num, get_parent, get_time
 
 def post_id(tag, comment=False):
@@ -5,8 +7,6 @@ def post_id(tag, comment=False):
     return int(parent['href'].split('=')[-1] if comment else parent['href'].split('/')[-2])
 
 def extract_data(element):
-    import re
-
     post = {
         "user": "",
         "type": "post",
@@ -67,12 +67,18 @@ def extract_data(element):
             post['time'] = get_time(info)
         elif index >= 5 and index <= comment_index:
             comments = info.split(' ')
+            is_comment = False
             if len(comments) > 1 and comments[1][:7] == "comment":
-                comment_index = index
-                last_index = comment_index + 5
-                text_index = 1
-                current_parent = None
-            else:
+                try:
+                    int(comments[0])
+                    is_comment = True
+                    comment_index = index
+                    last_index = comment_index + 5
+                    text_index = 1
+                    current_parent = None
+                except:
+                    pass
+            if not is_comment:
                 if not liked:
                     try:
                         if info[0] == '+':
