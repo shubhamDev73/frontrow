@@ -82,8 +82,6 @@ router.post('/posts/', upload.single('posts_file'), (req, res) => {
 								"errno": 401,
 								"post": post,
 							});
-							connection.queries -= 2;
-							return;
 						}
 						connection.queries += 2 * post['comments'].length;
 
@@ -100,8 +98,6 @@ router.post('/posts/', upload.single('posts_file'), (req, res) => {
 										"post": post,
 										"comment": comment,
 									});
-									connection.queries -= 2;
-									return;
 								}
 								connection.queries += 2 * comment['replies'].length;
 
@@ -118,20 +114,18 @@ router.post('/posts/', upload.single('posts_file'), (req, res) => {
 												"comment": comment,
 												"reply": reply,
 											});
-											connection.queries -= 2;
-											return;
 										}
 
 										connection.execute("SELECT `id` FROM `comment` WHERE `id` = ? AND `comment` = ?", [reply['id'], comment['id']], res, (results) => {
 											if(results.length == 0){
 												// reply not found. inserting
-												var sql = "INSERT INTO `comment` (`id`, `post`, `comment`, `user`, `time`, `text`, `likes`) VALUES (?, ?, ?, ?, convert(?, datetime), ?, ?);";
-												var values = [reply['id'], post['id'], comment['id'], reply['user'], reply['time'], reply['text'], reply['likes']];
+												var sql = "INSERT INTO `comment` (`id`, `post`, `comment`, `user`, `time`, `text`, `likes`, `error`) VALUES (?, ?, ?, ?, convert(?, datetime), ?, ?, ?);";
+												var values = [reply['id'], post['id'], comment['id'], reply['user'], reply['time'], reply['text'], reply['likes'], reply['error']];
 												connection.execute(sql, values, res);
 											}else{
 												// reply found. updating
-												var sql = "UPDATE `comment` SET `user` = ?, `time` = ?, `text` = ?, `likes` = ? WHERE `id` = ? AND `post` = ? AND `comment` = ?;";
-												var values = [reply['user'], reply['time'], reply['text'], reply['likes'], reply['id'], post['id'], comment['id']];
+												var sql = "UPDATE `comment` SET `user` = ?, `time` = ?, `text` = ?, `likes` = ?, `error` = ? WHERE `id` = ? AND `post` = ? AND `comment` = ?;";
+												var values = [reply['user'], reply['time'], reply['text'], reply['likes'], reply['error'], reply['id'], post['id'], comment['id']];
 												connection.execute(sql, values, res);
 											}
 										});
@@ -141,13 +135,13 @@ router.post('/posts/', upload.single('posts_file'), (req, res) => {
 								connection.execute("SELECT `id` FROM `comment` WHERE `id` = ? AND `post` = ?", [comment['id'], post['id']], res, (results) => {
 									if(results.length == 0){
 										// comment not found. inserting
-										var sql = "INSERT INTO `comment` (`id`, `post`, `user`, `time`, `text`, `likes`) VALUES (?, ?, ?, convert(?, datetime), ?, ?);";
-										var values = [comment['id'], post['id'], comment['user'], comment['time'], comment['text'], comment['likes']];
+										var sql = "INSERT INTO `comment` (`id`, `post`, `user`, `time`, `text`, `likes`, `error`) VALUES (?, ?, ?, convert(?, datetime), ?, ?, ?);";
+										var values = [comment['id'], post['id'], comment['user'], comment['time'], comment['text'], comment['likes'], comment['error']];
 										connection.execute(sql, values, res, reply);
 									}else{
 										// comment found. updating
-										var sql = "UPDATE `comment` SET `user` = ?, `time` = ?, `text` = ?, `likes` = ? WHERE `id` = ? AND `post` = ?;";
-										var values = [comment['user'], comment['time'], comment['text'], comment['likes'], comment['id'], post['id']];
+										var sql = "UPDATE `comment` SET `user` = ?, `time` = ?, `text` = ?, `likes` = ?, `error` = ? WHERE `id` = ? AND `post` = ?;";
+										var values = [comment['user'], comment['time'], comment['text'], comment['likes'], comment['error'], comment['id'], post['id']];
 										connection.execute(sql, values, res, reply);
 									}
 								});
@@ -158,13 +152,13 @@ router.post('/posts/', upload.single('posts_file'), (req, res) => {
 						connection.execute("SELECT `id` FROM `post` WHERE `id` = ? AND `group` = ?", [post['id'], group], res, (results) => {
 							if(results.length == 0){
 								// post not found. inserting
-								var sql = "INSERT INTO `post` (`id`, `group`, `user`, `time`, `type`, `text`, `likes`, `shares`) VALUES (?, ?, ?, convert(?, datetime), ?, ?, ?, ?);";
-								var values = [post['id'], group, post['user'], post['time'], post['type'], post['text'], post['likes'], post['shares']];
+								var sql = "INSERT INTO `post` (`id`, `group`, `user`, `time`, `type`, `text`, `likes`, `shares`, `error`) VALUES (?, ?, ?, convert(?, datetime), ?, ?, ?, ?, ?);";
+								var values = [post['id'], group, post['user'], post['time'], post['type'], post['text'], post['likes'], post['shares'], post['error']];
 								connection.execute(sql, values, res, comment);
 							}else{
 								// post found. updating
-								var sql = "UPDATE `post` SET `user` = ?, `time` = ?, `type` = ?, `text` = ?, `likes` = ?, `shares` = ? WHERE `id` = ? AND `group` = ?;";
-								var values = [post['user'], post['time'], post['type'], post['text'], post['likes'], post['shares'], post['id'], group];
+								var sql = "UPDATE `post` SET `user` = ?, `time` = ?, `type` = ?, `text` = ?, `likes` = ?, `shares` = ?, `error` = ? WHERE `id` = ? AND `group` = ?;";
+								var values = [post['user'], post['time'], post['type'], post['text'], post['likes'], post['shares'], post['error'], post['id'], group];
 								connection.execute(sql, values, res, comment);
 							}
 						});

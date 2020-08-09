@@ -109,7 +109,7 @@ def extract_data(element):
                     post['error'] += "%s present!!\n" % info
                     break
                 elif info == "Like" or info == "Love" or info == "Haha" or info == "Wow" or info == "Sad" or info == "Angry":
-                    post['error'] += "Error: Please reload facebook webpage and try again\n"
+                    post['error'] += "Please reload facebook and try again\n"
                     break
                 parent = get_parent(info, lambda parent: parent.has_attr('href'))
                 id = get_id("https://www.facebook.com%s" % parent['href'])
@@ -135,7 +135,7 @@ def extract_data(element):
                     if comment['text'] == '':
                         comment['text'] = "<sticker>"
                     if comment['text'][-8:] == "See more":
-                        comment['error'] += "Error: See more present!!\n"
+                        comment['error'] += "See more present!!\n"
                     if likes == "Hide or report this":
                         last_index -= 1
                         continue
