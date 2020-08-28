@@ -58,7 +58,7 @@ CREATE TABLE `comment` (
   `comment` bigint DEFAULT null COMMENT 'if reply, the comment which it is reply of',
   `user` varchar(50),
   `time` datetime NOT NULL,
-  `text` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `text` varchar(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `likes` int NOT NULL,
   `error` varchar(40) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT null
 );
