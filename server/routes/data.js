@@ -43,7 +43,15 @@ router.post('/posts/', upload.single('posts_file'), (req, res) => {
 	console.log("Executing 'posts.py'.......");
 
 	script.stdout.on('data', (data) => {
-		data.toString().replace(/\r/g, '').split('\n').forEach((line) => {if(line) console.log("-> " + line);});
+		data.toString().replace(/\r/g, '').split('\n').forEach((line) => {
+			if(line){
+				errors.push({
+					"code": "MSG_SCRIPT_POSTS",
+					"message": line,
+					"errno": 201,
+				});
+			}
+		});
 	});
 
 	script.stderr.on('data', (data) => {
@@ -182,7 +190,15 @@ router.post('/members/', upload.single('members_file'), (req, res) => {
 	console.log("Executing 'members.py'.......");
 
 	script.stdout.on('data', (data) => {
-		data.toString().replace(/\r/g, '').split('\n').forEach((line) => {if(line) console.log("-> " + line);});
+		data.toString().replace(/\r/g, '').split('\n').forEach((line) => {
+			if(line){
+				errors.push({
+					"code": "MSG_SCRIPT_MEMBERS",
+					"message": line,
+					"errno": 202,
+				});
+			}
+		});
 	});
 
 	script.stderr.on('data', (data) => {
@@ -350,7 +366,15 @@ router.post('/requests/', upload.single('requests_file'), (req, res) => {
 	console.log("Executing 'member_requests.py'.......");
 
 	script.stdout.on('data', (data) => {
-		data.toString().replace(/\r/g, '').split('\n').forEach((line) => {if(line) console.log("-> " + line);});
+		data.toString().replace(/\r/g, '').split('\n').forEach((line) => {
+			if(line){
+				errors.push({
+					"code": "MSG_SCRIPT_MEMBER_REQUESTS",
+					"message": line,
+					"errno": 203,
+				});
+			}
+		});
 	});
 
 	script.stderr.on('data', (data) => {

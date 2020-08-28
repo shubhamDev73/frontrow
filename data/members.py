@@ -70,7 +70,7 @@ if __name__ == '__main__':
         soup = BeautifulSoup(f, 'html.parser')
 
     total_members = get_num(next(soup.find(id="groupsMemberBrowser").children).text.replace("Members", ''))
-    # print("Total members: %d" % total_members)
+    print("Total members: %d" % total_members)
 
     members_container = soup.find(id="groupsMemberBrowserContent")
 
@@ -91,6 +91,8 @@ if __name__ == '__main__':
                 extracted_user = extract_data(member)
                 if extracted_user and extracted_user['id'] != 0:
                     users.append(extracted_user)
+
+    print("Extracted:", len(users))
 
     with open(sys.argv[2], "w", encoding="utf-8") if len(sys.argv) > 2 else sys.stdout as f:
         json.dump(users, f, indent=4)

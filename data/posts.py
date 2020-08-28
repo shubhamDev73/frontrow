@@ -182,17 +182,33 @@ if __name__ == "__main__":
     news_feed = soup.find(lambda tag: tag.has_attr("aria-label") and tag['aria-label'] == "News Feed")
     feed = news_feed.find(lambda tag: tag.has_attr("role") and tag['role'] == "feed")
 
+    errors_feed = 0
+    errors_news_feed = 0
     posts = []
     for post in feed.children:
         if posts_to_extract and len(posts) >= posts_to_extract:
             break
         if post.has_attr("role") and post['role'] == "article":
-            posts.append(extract_data(post))
+            try:
+                posts.append(extract_data(post))
+            except:
+                errors_feed += 1
     for post in news_feed.children:
         if posts_to_extract and len(posts) >= posts_to_extract:
             break
         if post.has_attr("role") and post['role'] == "article":
-            posts.append(extract_data(post))
+            try:
+                posts.append(extract_data(post))
+            except:
+                errors_news_feed += 1
+
+    print("Extracted:", len(posts))
+
+    if errors_feed:
+        print("Feed errors:", errors_feed)
+
+    if errors_news_feed:
+        print("News feed errors:", errors_news_feed)
 
     with open(sys.argv[2], "w", encoding="utf-8") if len(sys.argv) > 2 else sys.stdout as f:
         json.dump(posts, f, indent=4)

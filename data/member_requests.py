@@ -130,13 +130,15 @@ if __name__ == '__main__':
 
     elements = next(soup.find(id="member_requests_pagelet").find(lambda tag: tag.has_attr("class") and '_7gi8' not in tag['class'] and '_4-u2' in tag['class'] and '_4-u8' in tag['class']).children).children
 
-    # print("Total requests: %d" % get_num(list(next(elements).stripped_strings)[0].split(' ')[0]))
+    print("Total requests: %d" % get_num(list(next(elements).stripped_strings)[0].split(' ')[0]))
 
     users = []
     for request in next(elements).find("ul").children:
         if users_to_extract and len(users) >= users_to_extract:
             break
         users.append(extract_data(request))
+
+    print("Extracted:", len(users))
 
     with open(sys.argv[2], "w", encoding="utf-8") if len(sys.argv) > 2 else sys.stdout as f:
         json.dump(users, f, indent=4)
